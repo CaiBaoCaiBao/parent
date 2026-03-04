@@ -7,20 +7,19 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import org.springframework.context.annotation.Description;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("users")
-@Description(value = "用户信息表")
-public class Users {
+@TableName("user_profile")
+@Description(value = "用户资料")
+public class UserProfile {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
-    private String uUid; // ulid生成
-    private String userCode; // 前台用户自己输入，后台用户系统生成
-    private String email;
-    private String password;
-    private Integer role;
-    private Integer status;
+    private Long uid;
+    private String avatar;
+    private String bio;
+    private LocalDate birthDay;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     @TableField("deleted")
