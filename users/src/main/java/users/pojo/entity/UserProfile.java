@@ -18,9 +18,11 @@ public class UserProfile {
     private Long id;
     private Long uid;
     private String nickName; // 昵称
-    private String avatar;
-    private String bio;
-    private LocalDate birthDay;
+    private String idCard; // 身份证
+    private String phone; // 手机号
+    private String avatar; // 头像
+    private String bio; // 个人简介
+    private LocalDate birthDay; // 生日
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     @TableField("deleted")
