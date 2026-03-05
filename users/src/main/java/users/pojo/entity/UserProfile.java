@@ -17,6 +17,7 @@ public class UserProfile {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     private Long uid;
+    private String nickName; // 昵称
     private String avatar;
     private String bio;
     private LocalDate birthDay;

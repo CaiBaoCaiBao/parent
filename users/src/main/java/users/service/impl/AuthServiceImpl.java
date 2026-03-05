@@ -2,6 +2,8 @@ package users.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import common.common.AccessPayload;
+import common.common.RefreshPayload;
 import common.dict.DictConstants;
 import common.enums.ResultCode;
 import common.utils.JwtUtil;
@@ -9,11 +11,15 @@ import common.utils.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Service;
 import users.mapper.AuthMapper;
 import users.pojo.dto.LoginDTO;
 import users.pojo.entity.Users;
+import users.pojo.vo.LoginResponse;
 import users.service.AuthService;
+
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -39,7 +45,7 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, Users> implements A
         // TODO: 查询用户（根据 userName 查 email 或 username）
         QueryWrapper<Users> queryWrapper = new QueryWrapper<>();
         if(loginDTO.getAdminFlag()){ // 管理员
-            queryWrapper.eq("user_code", userName)
+            queryWrapper.eq("user_name", userName)
                     .and(i -> i.eq("deleted", 0));
         }else{
             queryWrapper.eq("email", userName)
@@ -59,8 +65,20 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, Users> implements A
         if (user.getStatus() != DictConstants.UserStatus.ACTIVE) {
             return Result.error("账号已被禁用");
         }
-
-//        String accessToken = jwtUtil.generateToken()
-        return null;
+        // TODO: 生成 accessToken 和 refreshToken
+        AccessPayload accessPayload = new AccessPayload();
+        Map<String, Object> accessClaims = jwtUtil.setAccessClaims(accessPayload);
+        String accessToken = jwtUtil.generateToken(accessClaims);
+        long refreshTokenExpireTime = jwtUtil.accessExpiration*2;
+        if(loginDTO.getRememberMe()){
+            refreshTokenExpireTime = jwtUtil.remExpiration;
+        }
+        RefreshPayload refreshPayload = new RefreshPayload();
+        Map<String, Object> refreshClaims = jwtUtil.setRefreshClaims(refreshPayload);
+        String refreshToken = jwtUtil.generateToken(refreshClaims, refreshTokenExpireTime);
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setAccessToken(accessToken);
+        loginResponse.setRefreshToken(refreshToken);
+        return Result.success("登录成功",loginResponse);
     }
 }

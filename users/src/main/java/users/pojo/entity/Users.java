@@ -16,10 +16,10 @@ public class Users {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     private String uUid; // ulid生成
-    private String userCode; // 前台用户自己输入，后台用户系统生成
+    private String userName; // 前台用户自己输入，后台用户系统生成（全局唯一）
     private String email;
     private String password;
-    private Integer role;
+    private String role;
     private Integer status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

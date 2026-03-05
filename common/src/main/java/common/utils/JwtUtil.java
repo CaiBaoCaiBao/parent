@@ -1,8 +1,12 @@
 package common.utils;
 
+import com.github.f4b6a3.ulid.UlidCreator;
+import common.common.AccessPayload;
+import common.common.RefreshPayload;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Description;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +19,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -28,11 +33,17 @@ public class JwtUtil {
     @Value("${jwt.public-key-path:public.pem}")
     private String publicKeyPath;
 
-    @Value("${jwt.expiration:86400000}")
-    private Long expiration;
+    @Value("${jwt.access-expiration:2*60*60*1000}")
+    public Long accessExpiration;  // 认证token过期时间
+
+    @Value("${jwt.rem-expiration:7*24*60*60*1000}")
+    public Long remExpiration;  // 七天免登录的刷新token过期时间
 
     private PrivateKey privateKey;
     private PublicKey publicKey;
+
+    @Value("${jwt.iss:2240709249}")
+    public String ISS;
 
     private PrivateKey loadPrivateKey(String path) throws Exception {
         String key;
@@ -104,7 +115,7 @@ public class JwtUtil {
 
     private String createToken(Map<String, Object> claims) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + expiration);
+        Date expiryDate = new Date(now.getTime() + accessExpiration);
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -149,36 +160,41 @@ public class JwtUtil {
         }
     }
 
-    public Boolean getAdminFlagFromToken(String token){
-        Claims claims = parseToken(token);
-        return claims.get("adminFlag", Boolean.class);
+    @Description("生成认证token负载")
+    public Map<String, Object> setAccessClaims(AccessPayload payload){
+        Map<String, Object> accessClaim = new HashMap<>();
+        String jti = UlidCreator.getUlid().toString();
+        accessClaim.put("iss",ISS); // 签发机关
+        accessClaim.put("sub",payload.getUUid()); // 主题（用户ID）
+        accessClaim.put("aud","trip-auth"); // 接收方
+        accessClaim.put("role",payload.getRole()); // 角色
+        accessClaim.put("email",payload.getEmail()); // 邮箱
+        accessClaim.put("jti",jti); // jwt标识
+        accessClaim.put("userName",payload.getUserName()); // 用户名
+        accessClaim.put("avatar",payload.getAvatar()); // 头像
+        accessClaim.put("status",payload.getStatus());  // 用户状态
+        accessClaim.put("nickName",payload.getNickName()); // 用户昵称
+        accessClaim.put("tokenType","access");
+        return  accessClaim;
     }
 
+    @Description("生成刷新token负载")
+    public Map<String, Object> setRefreshClaims(RefreshPayload payload){
+        Map<String, Object> refreshClaim = new HashMap<>();
+        String jti = UlidCreator.getUlid().toString();
+        refreshClaim.put("iss",ISS); // 签发机关
+        refreshClaim.put("sub",payload.getUUid()); // 主题（用户ID）
+        refreshClaim.put("aud","trip-auth"); // 接收方
+        refreshClaim.put("jti",jti); // jwt标识
+        refreshClaim.put("userName",payload.getNickName()); // 用户名
+        refreshClaim.put("tokenType","refresh");
+//        refreshClaim.put("deviceId",""); // 设备标识
+        return  refreshClaim;
+    }
 
-
-    public String getUserCodeFromToken(String token) {
+    public String getUUidFromToken(String token) {
         Claims claims = parseToken(token);
         return claims.get("sub", String.class);
-    }
-
-    public String getUsernameFromToken(String token) {
-        Claims claims = parseToken(token);
-        return claims.get("username", String.class);
-    }
-
-    public String getEmailFromToken(String token) {
-        Claims claims = parseToken(token);
-        return claims.get("email", String.class);
-    }
-
-    public String getFirstNameFromToken(String token) {
-        Claims claims = parseToken(token);
-        return claims.get("firstname", String.class);
-    }
-
-    public String getLastNameFromToken(String token) {
-        Claims claims = parseToken(token);
-        return claims.get("lastname", String.class);
     }
 
     public boolean validateToken(String token) {
