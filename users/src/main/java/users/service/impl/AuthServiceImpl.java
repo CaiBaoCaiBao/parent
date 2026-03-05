@@ -5,16 +5,18 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import common.common.AccessPayload;
 import common.common.RefreshPayload;
 import common.dict.DictConstants;
+import common.enums.RedisKey;
 import common.enums.ResultCode;
 import common.utils.JwtUtil;
+import common.utils.RedisUtil;
 import common.utils.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Service;
 import users.mapper.AuthMapper;
 import users.pojo.dto.LoginDTO;
+import users.pojo.dto.RegisterDTO;
 import users.pojo.entity.Users;
 import users.pojo.vo.LoginResponse;
 import users.service.AuthService;
@@ -28,7 +30,8 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, Users> implements A
     AuthMapper authMapper;
     @Autowired
     JwtUtil jwtUtil;
-
+    @Autowired
+    RedisUtil redisUtil;
 
     @Override
     public Result<?> login(LoginDTO loginDTO) {
@@ -79,6 +82,17 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, Users> implements A
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setAccessToken(accessToken);
         loginResponse.setRefreshToken(refreshToken);
+        // TODO: 保存 refreshToken 到 redis 中
+        redisUtil.set(
+                RedisKey.REFRESH_TOKEN.getKey()+refreshPayload.getJit(),
+                refreshToken,
+                refreshTokenExpireTime
+        );
         return Result.success("登录成功",loginResponse);
+    }
+
+    @Override
+    public Result<?> register(RegisterDTO registerDTO) {
+        return null;
     }
 }

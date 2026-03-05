@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import users.pojo.dto.LoginDTO;
+import users.pojo.dto.RegisterDTO;
 import users.service.AuthService;
 
 @RestController
@@ -39,5 +40,12 @@ public class AuthController {
         }
         loginDTO.setAdminFlag(true);
         return authService.login(loginDTO);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/api/register")
+    @Description(value = "前台用户注册")
+    public Result<?> register(@RequestBody @Valid RegisterDTO registerDTO){
+        return authService.register(registerDTO);
     }
 }

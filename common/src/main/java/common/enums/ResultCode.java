@@ -1,11 +1,13 @@
 package common.enums;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
  * 统一响应状态码枚举
  */
 @Getter
+@AllArgsConstructor
 public enum ResultCode {
 
     /**
@@ -160,9 +162,4 @@ public enum ResultCode {
 
     private final Integer code;
     private final String message;
-
-    ResultCode(Integer code, String message) {
-        this.code = code;
-        this.message = message;
-    }
 }

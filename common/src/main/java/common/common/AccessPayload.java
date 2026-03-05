@@ -13,4 +13,5 @@ public class AccessPayload {
     private String avatar;
     private String status;
     private String nickName;
+    private String jit;
 }

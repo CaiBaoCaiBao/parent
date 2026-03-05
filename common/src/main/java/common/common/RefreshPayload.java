@@ -8,4 +8,5 @@ import org.springframework.context.annotation.Description;
 public class RefreshPayload {
     private String uUid;
     private String nickName;
+    private String jit;
 }
