@@ -18,10 +18,6 @@ public class LoginDTO {
      */
     private String loginMethod;
     /**
-     * 是否是管理员
-     */
-    private Boolean adminFlag;
-    /**
      * 是否记住我
      */
     private Boolean rememberMe;

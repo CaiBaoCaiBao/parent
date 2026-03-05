@@ -20,7 +20,7 @@ public class Users {
     private String email;
     private String password;
     private String role;
-    private Integer status;
+    private String status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     @TableField("deleted")

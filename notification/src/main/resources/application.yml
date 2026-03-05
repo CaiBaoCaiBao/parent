@@ -1,0 +1,77 @@
+server:
+  port: 8002
+spring:
+  application:
+    name: notification
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+    listener:
+      simple:
+        acknowledge-mode: manual
+        prefetch: 1
+        default-requeue-rejected: false
+        retry:
+          max-attempts: 3
+          enabled: true
+          initial-interval: 1000
+          multiplier: 2.0
+
+  config:
+    import: optional:nacos:${spring.application.name}
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848	#注册中心地址
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tourwo
+    username: postgres
+    password: '040210'
+    driver-class-name: org.postgresql.Driver
+    # 推荐使用HikariCP连接池
+    type: com.zaxxer.hikari.HikariDataSource
+  mail:
+    host: smtp.163.com
+    username: tourwomail@163.com
+    password: NLp2qcvgkLgFQBYa
+    port: 465
+    protocol: smtp
+    default-encoding: utf-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            enable: true
+          socketFactory:
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
+
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-not-delete-value: 0
+      logic-delete-value: 1
+
+logging:
+  config: classpath:notification-logback.xml
+  level:
+    root: info
+    notification: debug
+
+notification:
+  service:
+    name: notification
+    context-id: notification-service

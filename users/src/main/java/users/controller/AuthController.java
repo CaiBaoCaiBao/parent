@@ -22,23 +22,8 @@ public class AuthController {
 
     @Transactional(rollbackFor = Exception.class)
     @PostMapping("/api/login")
-    @Description(value = "前台用户登录")
+    @Description(value = "用户登录")
     public Result<?> userLogin(@RequestBody @Valid LoginDTO loginDTO){
-        if (loginDTO.getAdminFlag() == null) {
-            return Result.error(ResultCode.VALIDATE_FAILED.getCode(),"无法识别身份，缺少身份标识参数");
-        }
-        loginDTO.setAdminFlag(false);
-        return authService.login(loginDTO);
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    @PostMapping("/admin-api/login")
-    @Description(value = "管理员登录")
-    public Result<?> adminLogin(@RequestBody @Valid LoginDTO loginDTO){
-        if (loginDTO.getAdminFlag() == null) {
-            return Result.error(ResultCode.VALIDATE_FAILED.getCode(),"无法识别身份，缺少身份标识参数");
-        }
-        loginDTO.setAdminFlag(true);
         return authService.login(loginDTO);
     }
 

@@ -163,10 +163,9 @@ public class JwtUtil {
     @Description("生成认证token负载")
     public Map<String, Object> setAccessClaims(AccessPayload payload){
         Map<String, Object> accessClaim = new HashMap<>();
-        payload.setJit(UlidCreator.getUlid().toString());
         accessClaim.put("iss",ISS); // 签发机关
         accessClaim.put("sub",payload.getUUid()); // 主题（用户ID）
-        accessClaim.put("aud","trip-auth"); // 接收方
+        accessClaim.put("aud","trip-api"); // 接收方
         accessClaim.put("role",payload.getRole()); // 角色
         accessClaim.put("email",payload.getEmail()); // 邮箱
         accessClaim.put("jti",payload.getJit()); // jwt标识
@@ -181,12 +180,11 @@ public class JwtUtil {
     @Description("生成刷新token负载")
     public Map<String, Object> setRefreshClaims(RefreshPayload payload){
         Map<String, Object> refreshClaim = new HashMap<>();
-        payload.setJit(UlidCreator.getUlid().toString());
         refreshClaim.put("iss",ISS); // 签发机关
         refreshClaim.put("sub",payload.getUUid()); // 主题（用户ID）
         refreshClaim.put("aud","trip-auth"); // 接收方
         refreshClaim.put("jti",payload.getJit()); // jwt标识
-        refreshClaim.put("userName",payload.getNickName()); // 用户名
+        refreshClaim.put("userName",payload.getUserName()); // 用户名
         refreshClaim.put("tokenType","refresh");
 //        refreshClaim.put("deviceId",""); // 设备标识
         return  refreshClaim;

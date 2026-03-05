@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class UserProfile {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
-    private Long uid;
+    private String uUid;
     private String nickName; // 昵称
     private String idCard; // 身份证
     private String phone; // 手机号

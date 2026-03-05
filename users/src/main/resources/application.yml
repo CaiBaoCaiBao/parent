@@ -42,3 +42,8 @@ logging:
   level:
     root: info
     users: debug
+
+users:
+  service:
+    name: users
+    context-id: users-service

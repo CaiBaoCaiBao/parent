@@ -7,6 +7,6 @@ import org.springframework.context.annotation.Description;
 @Description(value = "刷新Token载荷")
 public class RefreshPayload {
     private String uUid;
-    private String nickName;
+    private String userName;
     private String jit;
 }
