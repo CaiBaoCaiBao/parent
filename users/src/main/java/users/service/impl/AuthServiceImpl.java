@@ -11,6 +11,7 @@ import common.enums.ResultCode;
 import common.utils.JwtUtil;
 import common.utils.RedisUtil;
 import common.utils.Result;
+import common.utils.Verification;
 import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,8 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, Users> implements A
     JwtUtil jwtUtil;
     @Autowired
     RedisUtil redisUtil;
+    @Autowired
+    Verification verification;
 
     @Override
     public Result<?> login(LoginDTO loginDTO) {
@@ -58,7 +61,7 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, Users> implements A
         Users user;
         // TODO: 查询用户（根据 userName 查 email 或 username）
         QueryWrapper<Users> queryWrapper = new QueryWrapper<>();
-        if(!isEmail(userName)){ // 管理员
+        if(!verification.isEmail(userName)){ // 管理员
             queryWrapper.eq("user_name", userName)
                     .and(i -> i.eq("deleted", 0));
         }else{
@@ -74,16 +77,31 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, Users> implements A
         }
 
         // TODO: 根据用户的登录方式进行校验
-        if(isEmail(userName)){ // 非管理员
-            if(loginDTO.getLoginMethod().equals("otp")){ // 验证码登录
-                String otp = notificationClient.sendOtpMail(user.getEmail(), loginDTO.getKey(), "otp");
+        if(loginDTO.getLoginMethod().equals("otp")){ // 验证码登录
+            if(verification.isEmail(userName)){ // 非管理员
+                String email = user.getEmail();
+                if(email == null || email.isEmpty()){
+                    log.warn("用户登录失败: {} 邮箱为空", userName);
+                    return Result.error(ResultCode.VALIDATE_FAILED.getCode(),"邮箱不存在");
+                }
+                String storedOtp = redisUtil.get(RedisKey.LOGIN_OTP.getKey() + email).toString();
+                if(storedOtp == null || !storedOtp.equals(loginDTO.getKey())){
+                    log.warn("用户登录失败: {} 验证码错误或已过期", userName);
+                    return Result.error(ResultCode.VALIDATE_FAILED.getCode(),"验证码错误或已过期");
+                }
+                // 验证码校验通过后，删除Redis中的OTP，防止重复使用
+                redisUtil.del(RedisKey.LOGIN_OTP.getKey() + email);
+                log.info("用户验证码登录校验通过: {}", userName);
+            }else{
+                log.warn("用户登录失败: {} 管理员不支持验证码登录", userName);
+                return Result.error(ResultCode.VALIDATE_FAILED.getCode(),"登录方式错误");
             }
-        }
-
-        // TODO: 验证密码
-        if (!BCrypt.checkpw(loginDTO.getKey(), user.getPassword())) {
-            log.warn("用户登录失败: {} 密码错误", userName);
-            return Result.error(ResultCode.VALIDATE_FAILED.getCode(),"密码错误");
+        } else { // 密码登录
+            // TODO: 验证密码
+            if (!BCrypt.checkpw(loginDTO.getKey(), user.getPassword())) {
+                log.warn("用户登录失败: {} 密码错误", userName);
+                return Result.error(ResultCode.VALIDATE_FAILED.getCode(),"密码错误");
+            }
         }
         // TODO: 验证账号状态
         if (!Objects.equals(user.getStatus(), DictConstants.UserStatus.ACTIVE)) {
@@ -121,9 +139,9 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, Users> implements A
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setAccessToken(accessToken);
         loginResponse.setRefreshToken(refreshToken);
-        // TODO: 保存 refreshToken 到 redis 中
+        // TODO: 保存 refreshToken 到 redis 中（加入用户标识，防止同一JIT被不同用户使用）
         redisUtil.set(
-                RedisKey.REFRESH_TOKEN.getKey()+refreshPayload.getJit(),
+                RedisKey.REFRESH_TOKEN.getKey() + user.getUUid() + ":" + refreshPayload.getJit(),
                 refreshToken,
                 refreshTokenExpireTime/1000
         );
@@ -134,19 +152,5 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, Users> implements A
     @Override
     public Result<?> register(RegisterDTO registerDTO) {
         return null;
-    }
-
-    /**
-     * 判断字符串是否为邮箱格式
-     * @param str 要检查的字符串
-     * @return true=邮箱(普通用户), false=用户名(管理员)
-     */
-    private boolean isEmail(String str) {
-        if (str == null || str.isEmpty()) {
-            return false;
-        }
-        // 简单判断：包含 @ 符号且 @ 后面有点号
-        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
-        return str.matches(emailRegex);
     }
 }
