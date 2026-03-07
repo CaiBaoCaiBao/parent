@@ -23,7 +23,11 @@ public enum RedisKey {
     /**
      * 注册OTP验证码
      */
-    REGISTER_OTP("otp:register:", "注册OTP验证码");;
+    REGISTER_OTP("otp:register:", "注册OTP验证码"),
+    /**
+     * 忘记密码OTP验证码
+     */
+    FORGOT_PASSWORD_OTP("otp:forgot-pwd:", "忘记密码OTP验证码");
 
     private final String key;
     private final String desc;

@@ -9,7 +9,7 @@ import lombok.Getter;
 public enum MailTemplate {
     REGISTER("register", RedisKey.REGISTER_OTP.getKey(), "注册验证码", "register.html"),
     LOGIN("login", RedisKey.LOGIN_OTP.getKey(),"登录验证码", "login.html"),
-    ;
+    FORGOT_PASSWORD("forgot-password", RedisKey.FORGOT_PASSWORD_OTP.getKey(),"忘记密码验证码", "forgot-password.html"),;
 
     private final String code;
     private final String redisKey;

@@ -1,5 +1,6 @@
 package users.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.f4b6a3.ulid.UlidCreator;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import users.client.NotificationClient;
 import users.mapper.UserProfileMapper;
 import users.mapper.UsersMapper;
+import users.pojo.dto.ForgotPasswordDTO;
 import users.pojo.dto.LoginDTO;
 import users.pojo.dto.RegisterDTO;
 import users.pojo.entity.UserProfile;
@@ -108,6 +110,7 @@ public class AuthServiceImpl extends ServiceImpl<UsersMapper, Users> implements 
                     return Result.error(ResultCode.VALIDATE_FAILED.getCode(), "验证码错误或已过期");
                 }
                 log.info("用户验证码登录校验通过: {}", userName);
+                redisUtil.del(otpKey);
             }else{
                 log.warn("用户登录失败: {} 管理员不支持验证码登录", userName);
                 return Result.error(ResultCode.VALIDATE_FAILED.getCode(), "登录方式错误");
@@ -217,7 +220,7 @@ public class AuthServiceImpl extends ServiceImpl<UsersMapper, Users> implements 
             log.warn("用户注册失败: {} 验证码错误或已过期", email);
             return Result.error(ResultCode.VALIDATE_FAILED.getCode(), "验证码错误或已过期");
         }
-
+        redisUtil.del(otpKey);
         // 查询用户是否存在（合并查询）
         QueryWrapper<Users> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("email", email)
@@ -260,5 +263,47 @@ public class AuthServiceImpl extends ServiceImpl<UsersMapper, Users> implements 
         }
         log.info("用户注册成功: {}", email);
         return Result.success("注册成功");
+    }
+
+    @Override
+    public Result<?> forgotPassword(ForgotPasswordDTO forgotPasswordDTO) {
+        String email = verification.trimStr(forgotPasswordDTO.getEmail());
+        String otp = verification.trimStr(forgotPasswordDTO.getOtp());
+        String password = verification.trimStr(forgotPasswordDTO.getNewPassword());
+        if(email.isEmpty()){
+            log.warn("用户忘记密码失败: {} 邮箱地址为空", email);
+            return Result.error(ResultCode.VALIDATE_FAILED.getCode(), "邮箱地址为空");
+        }
+        if(otp.isEmpty()){
+            log.warn("用户忘记密码失败: {} 验证码为空", email);
+            return Result.error(ResultCode.VALIDATE_FAILED.getCode(), "验证码为空");
+        }
+        if(password.isEmpty()){
+            log.warn("用户忘记密码失败: {} 新密码为空", email);
+            return Result.error(ResultCode.VALIDATE_FAILED.getCode(), "新密码为空");
+        }
+        // 验证验证码（原子性验证并删除，防止并发重复使用）
+        String otpKey = RedisKey.FORGOT_PASSWORD_OTP.getKey() + email;
+        Boolean otpValid = redisUtil.verifyAndDeleteOtp(otpKey, otp);
+        if (!otpValid) {
+            log.warn("用户忘记密码失败: {} 验证码错误或已过期", email);
+            return Result.error(ResultCode.VALIDATE_FAILED.getCode(), "验证码错误或已过期");
+        }
+        redisUtil.del(otpKey);
+        Wrapper<Users> wrapper = new QueryWrapper<Users>().eq("email", email);
+        Users user = usersMapper.selectOne(wrapper);
+        if(user == null){
+            log.warn("用户忘记密码失败: {} 用户不存在", email);
+            return Result.error(ResultCode.USER_NOT_FOUND.getCode(), "用户不存在");
+        }
+        String pwdHash = BCrypt.hashpw(password, BCrypt.gensalt());
+        user.setPassword(pwdHash);
+        int update = usersMapper.updateById(user);
+        if(update != 1){
+            log.warn("用户忘记密码失败: {} 更新密码失败", email);
+            return Result.error(ResultCode.DATABASE_OPERATION_FAILED.getCode(), "更新密码失败");
+        }
+        log.info("用户忘记密码成功: {}", email);
+        return Result.success("忘记密码成功");
     }
 }
