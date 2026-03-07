@@ -1,6 +1,7 @@
 package users.interceptor;
 
 import common.context.UserContext;
+import common.utils.Verification;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -16,11 +17,13 @@ import users.mapper.UsersMapper;
 @Slf4j
 @Component
 public class UserContextInterceptor implements HandlerInterceptor {
+    @Autowired
+    Verification verification;
 
     /**
      * 网关传递的用户ID请求头
      */
-    private static final String HEADER_USER_ID = "X-User-Id";
+    private static final String HEADER_USER_ID = "X-User-Uuid";
 
     /**
      * 网关传递的用户名请求头
@@ -52,10 +55,10 @@ public class UserContextInterceptor implements HandlerInterceptor {
      */
     private static final String HEADER_STATUS = "X-Status";
 
-    /**
-     * 网关传递的设备ID请求头
-     */
-    private static final String HEADER_DEVICE_ID = "X-Device-Id";
+//    /**
+//     * 网关传递的设备ID请求头
+//     */
+//    private static final String HEADER_DEVICE_ID = "X-Device-Id";
 
     @Autowired
     private UsersMapper usersMapper;
@@ -64,36 +67,36 @@ public class UserContextInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         try {
             // 从请求头获取用户信息
-            String userIdStr = request.getHeader(HEADER_USER_ID);
+            String userUid = request.getHeader(HEADER_USER_ID);
 
             // 如果没有用户ID，说明是游客访问或未登录
-            if (userIdStr == null || userIdStr.isEmpty()) {
+            if (userUid == null || userUid.isEmpty()) {
                 log.debug("请求未携带用户信息，游客访问");
                 return true;
             }
 
             // 解析用户ID
-            Long userId = parseLong(userIdStr);
-            if (userId == null) {
-                log.warn("无效的用户ID: {}", userIdStr);
+            String uUid = verification.trimStr(userUid);
+            if (uUid == null) {
+                log.warn("无效的用户ID: {}", userUid);
                 return true;
             }
 
             // 构建用户信息
             UserContext.UserInfo userInfo = new UserContext.UserInfo();
-            userInfo.setUserId(userId);
-            userInfo.setUsername(request.getHeader(HEADER_USERNAME));
+            userInfo.setUUid(userUid);
+            userInfo.setUserName(request.getHeader(HEADER_USERNAME));
             userInfo.setEmail(request.getHeader(HEADER_EMAIL));
-            userInfo.setNickname(request.getHeader(HEADER_NICKNAME));
+            userInfo.setNickName(request.getHeader(HEADER_NICKNAME));
             userInfo.setAvatar(request.getHeader(HEADER_AVATAR));
-            userInfo.setRole(parseInteger(request.getHeader(HEADER_ROLE)));
-            userInfo.setStatus(parseInteger(request.getHeader(HEADER_STATUS)));
-            userInfo.setDeviceId(request.getHeader(HEADER_DEVICE_ID));
+            userInfo.setRole(request.getHeader(HEADER_ROLE));
+            userInfo.setStatus(request.getHeader(HEADER_STATUS));
+//            userInfo.setDeviceId(request.getHeader(HEADER_DEVICE_ID));
 
             // 设置到上下文
             UserContext.setUserInfo(userInfo);
 
-            log.debug("用户上下文已设置: userId={}, username={}", userId, userInfo.getUsername());
+            log.debug("用户上下文已设置: uUid={}, username={}", uUid, userInfo.getUserName());
         } catch (Exception e) {
             log.error("设置用户上下文失败", e);
         }

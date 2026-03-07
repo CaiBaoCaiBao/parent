@@ -16,6 +16,7 @@ import users.service.AuthService;
 
 @RestController
 @RequestMapping("/users/auth")
+@Description("认证功能接口")
 public class AuthController {
     @Autowired
     private AuthService authService;

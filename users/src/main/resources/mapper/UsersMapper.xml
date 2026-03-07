@@ -2,7 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="users.mapper.UsersMapper">
 
-
-
+    <select id="queryUserList" resultType="users.pojo.vo.UserListVo" parameterType="users.pojo.dto.QueryUserListDTO">
+        select u.u_uid,
+               u.user_name,
+               u.email,
+               u.role,
+               u.status,
+               up.nick_name,
+               up.avatar,
+               u.created_at,
+               u.updated_at
+        from users u
+        join user_profile up on u.u_uid = up.u_uid
+        where 1 = 1
+        <if test="name != null || name != ''">
+            and u.user_name like concat('%', #{name}, '%')
+        </if>
+        <if test="name != null || name != ''">
+            and up.nick_name like concat('%', #{name}, '%')
+        </if>
+        <if test="email != null || email != ''">
+            and u.email like concat('%', #{email}, '%')
+        </if>
+        <if test="role != null || role != ''">
+            and u.role like concat('%', #{role}, '%')
+        </if>
+    </select>
 
 </mapper>

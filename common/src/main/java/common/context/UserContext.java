@@ -27,9 +27,9 @@ public class UserContext {
     /**
      * 获取用户ID
      */
-    public static Long getUserId() {
+    public static String getUserUUid() {
         UserInfo userInfo = USER_INFO.get();
-        return userInfo != null ? userInfo.getUserId() : null;
+        return userInfo != null ? userInfo.getUUid() : null;
     }
 
     /**
@@ -37,7 +37,7 @@ public class UserContext {
      */
     public static String getUsername() {
         UserInfo userInfo = USER_INFO.get();
-        return userInfo != null ? userInfo.getUsername() : null;
+        return userInfo != null ? userInfo.getUserName() : null;
     }
 
     /**
@@ -53,7 +53,7 @@ public class UserContext {
      */
     public static String getNickname() {
         UserInfo userInfo = USER_INFO.get();
-        return userInfo != null ? userInfo.getNickname() : null;
+        return userInfo != null ? userInfo.getNickName() : null;
     }
 
     /**
@@ -67,7 +67,7 @@ public class UserContext {
     /**
      * 获取角色
      */
-    public static Integer getRole() {
+    public static String getRole() {
         UserInfo userInfo = USER_INFO.get();
         return userInfo != null ? userInfo.getRole() : null;
     }
@@ -75,18 +75,18 @@ public class UserContext {
     /**
      * 获取状态
      */
-    public static Integer getStatus() {
+    public static String getStatus() {
         UserInfo userInfo = USER_INFO.get();
         return userInfo != null ? userInfo.getStatus() : null;
     }
 
-    /**
-     * 获取设备ID
-     */
-    public static String getDeviceId() {
-        UserInfo userInfo = USER_INFO.get();
-        return userInfo != null ? userInfo.getDeviceId() : null;
-    }
+//    /**
+//     * 获取设备ID
+//     */
+//    public static String getDeviceId() {
+//        UserInfo userInfo = USER_INFO.get();
+//        return userInfo != null ? userInfo.getDeviceId() : null;
+//    }
 
     /**
      * 清除用户信息
@@ -103,12 +103,12 @@ public class UserContext {
         /**
          * 用户ID
          */
-        private Long userId;
+        private String uUid;
 
         /**
          * 用户名
          */
-        private String username;
+        private String userName;
 
         /**
          * 邮箱
@@ -118,7 +118,7 @@ public class UserContext {
         /**
          * 昵称
          */
-        private String nickname;
+        private String nickName;
 
         /**
          * 头像
@@ -126,18 +126,18 @@ public class UserContext {
         private String avatar;
 
         /**
-         * 角色：0-普通用户，1-管理员
+         * 角色：user-普通用户，admin-管理员
          */
-        private Integer role;
+        private String role;
 
         /**
-         * 状态：0-禁用，1-正常
+         * 状态：inactive-禁用，active-正常
          */
-        private Integer status;
+        private String status;
 
         /**
          * 设备ID
          */
-        private String deviceId;
+//        private String deviceId;
     }
 }

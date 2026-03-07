@@ -14,6 +14,7 @@ import users.service.MailService;
 
 @RestController
 @RequestMapping("/users/mail")
+@Description("邮件功能接口")
 public class MailController {
     @Autowired
     MailService mailService;
