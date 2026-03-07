@@ -10,18 +10,17 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/mail")
+@RequestMapping("/notification/mail")
 public class MailController {
     @Autowired
     MailService mailService;
 
     @Transactional(rollbackFor = Exception.class)
     @PostMapping("/trip-api/sendOtpMail")
-    @Description("服务内调用发送邮件")
-    public Result<?> sendMail(@RequestParam("email") String email,
-                              @RequestParam("otp") String otp,
+    @Description("服务内调用发送验证码邮件")
+    public Result<?> sendOtpMail(@RequestParam("email") String email,
                               @RequestParam("template") String template
     ) {
-        return mailService.sendOtpMail(email, otp, template);
+        return mailService.sendOtpMail(email, template);
     }
 }

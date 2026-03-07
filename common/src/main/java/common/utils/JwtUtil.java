@@ -21,6 +21,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 @Slf4j
@@ -33,11 +34,9 @@ public class JwtUtil {
     @Value("${jwt.public-key-path:public.pem}")
     private String publicKeyPath;
 
-    @Value("${jwt.access-expiration:2*60*60*1000}")
-    public Long accessExpiration;  // 认证token过期时间
+    public Long accessExpiration = TimeUnit.HOURS.toMillis(2);  // 认证token过期时间
 
-    @Value("${jwt.rem-expiration:7*24*60*60*1000}")
-    public Long remExpiration;  // 七天免登录的刷新token过期时间
+    public Long remExpiration = TimeUnit.DAYS.toMillis(7);  // 七天免登录的刷新token过期时间
 
     private PrivateKey privateKey;
     private PublicKey publicKey;

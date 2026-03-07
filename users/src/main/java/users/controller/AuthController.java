@@ -15,7 +15,7 @@ import users.pojo.dto.RegisterDTO;
 import users.service.AuthService;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/users/auth")
 public class AuthController {
     @Autowired
     private AuthService authService;

@@ -70,8 +70,3 @@ logging:
   level:
     root: info
     notification: debug
-
-notification:
-  service:
-    name: notification
-    context-id: notification-service

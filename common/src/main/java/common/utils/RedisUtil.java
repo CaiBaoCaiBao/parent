@@ -5,8 +5,10 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -444,5 +446,38 @@ public class RedisUtil {
      */
     public Long zSize(String key) {
         return redisTemplate.opsForZSet().size(key);
+    }
+
+    /**
+     * 原子性验证并删除验证码（防止并发重复使用）
+     * 使用 Lua 脚本保证操作的原子性
+     *
+     * @param key   Redis键
+     * @param value 验证码值
+     * @return 验证成功返回true，验证失败或已过期返回false
+     */
+    @Description("原子性验证并删除验证码")
+    public Boolean verifyAndDeleteOtp(String key, String value) {
+        String luaScript = "local storedValue = redis.call('get', KEYS[1]) " +
+                "if storedValue == false then " +
+                "return 0 " +
+                "end " +
+                "if storedValue == ARGV[1] then " +
+                "redis.call('del', KEYS[1]) " +
+                "return 1 " +
+                "else " +
+                "return 0 " +
+                "end";
+
+        DefaultRedisScript<Long> redisScript = new DefaultRedisScript<>();
+        redisScript.setScriptText(luaScript);
+        redisScript.setResultType(Long.class);
+
+        Long result = redisTemplate.execute(
+                redisScript,
+                Collections.singletonList(key),
+                value
+        );
+        return result != null && result == 1;
     }
 }

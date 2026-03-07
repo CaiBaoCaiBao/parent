@@ -34,7 +34,8 @@ mybatis-plus:
 jwt:
   private-key-path: classpath:private.pem
   public-key-path: classpath:public.pem
-  access-expiration: 2*60*60*1000 # 过期时间：2小时，单位毫秒
+  access-expiration: 7200000    # 2小时
+  refresh-expiration: 604800000 # 7天
   iss: 2240709249
 
 logging:
@@ -42,8 +43,3 @@ logging:
   level:
     root: info
     users: debug
-
-users:
-  service:
-    name: users
-    context-id: users-service

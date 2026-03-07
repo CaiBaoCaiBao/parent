@@ -16,6 +16,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(userContextInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/api/user/login", "/api/user/register", "/api/user/getOTP","/api/user/logout");
+                .excludePathPatterns("/api/user/login", "/api/user/register", "/users/mail/api/sendOtp","/api/user/logout");
     }
 }
