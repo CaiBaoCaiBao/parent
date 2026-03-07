@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.context.annotation.Description;
 import users.pojo.dto.QueryUserListDTO;
 import users.pojo.entity.Users;
+import users.pojo.vo.UserInfoVo;
 import users.pojo.vo.UserListVo;
 
 import java.util.List;
@@ -13,4 +14,7 @@ import java.util.List;
 public interface UsersMapper extends BaseMapper<Users> {
     @Description("查询用户列表")
     List<UserListVo> queryUserList(QueryUserListDTO queryUserListDTO);
+
+    @Description("获取用户信息")
+    UserInfoVo getUserInfo(String uUid);
 }

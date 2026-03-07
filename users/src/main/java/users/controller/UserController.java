@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import users.pojo.dto.CreateAdminDTO;
 import users.pojo.dto.DeleteUserDTO;
 import users.pojo.dto.QueryUserListDTO;
 import users.pojo.dto.SaveUserDTO;
@@ -18,10 +19,10 @@ public class UserController {
     UsersService usersService;
 
     @Transactional(rollbackFor = Exception.class)
-    @PostMapping("/admin-api/save")
-    @Description(value = "保存用户信息")
-    public Result<?> save(@RequestBody @Valid SaveUserDTO saveUserDTO){
-        return usersService.saveUser(saveUserDTO);
+    @PostMapping("/admin-api/create")
+    @Description(value = "创建管理员")
+    public Result<?> create(@RequestBody @Valid CreateAdminDTO createAdminDTO){
+        return usersService.createAdmin(createAdminDTO);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -36,5 +37,12 @@ public class UserController {
     @Description(value = "查询用户列表")
     public Result<?> list(@ModelAttribute QueryUserListDTO queryUserListDTO){
         return usersService.queryUserList(queryUserListDTO);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @GetMapping("/api/info")
+    @Description(value = "查询用户详情资料")
+    public Result<?> detail(@RequestParam(value = "uid") String uUid){
+        return usersService.getUserInfo(uUid);
     }
 }

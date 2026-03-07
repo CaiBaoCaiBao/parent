@@ -31,7 +31,6 @@
         <java.version>17</java.version>
         <nacos-discovery.version>2025.0.0.0</nacos-discovery.version>
         <jbcrypt.version>0.4</jbcrypt.version>
-        <pinyin.version>2.5.1</pinyin.version>
     </properties>
     <dependencies>
         <dependency>
@@ -77,12 +76,6 @@
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
             <version>${jbcrypt.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.belerweb</groupId>
-            <artifactId>pinyin4j</artifactId>
-            <version>${pinyin.version}</version>
         </dependency>
 
         <dependency>

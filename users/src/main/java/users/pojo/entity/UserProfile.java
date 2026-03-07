@@ -22,7 +22,7 @@ public class UserProfile {
     private String phone; // 手机号
     private String avatar; // 头像
     private String bio; // 个人简介
-    private LocalDate birthDay; // 生日
+    private LocalDate birthday; // 生日
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     @TableField("deleted")
