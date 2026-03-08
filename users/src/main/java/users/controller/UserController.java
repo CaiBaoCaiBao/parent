@@ -2,10 +2,13 @@ package users.controller;
 
 import common.utils.Result;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
+import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import users.pojo.dto.*;
 import users.service.UsersService;
 
@@ -58,9 +61,9 @@ public class UserController {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    @PostMapping("/api/upload-avatar")
+    @PostMapping(value = "/api/upload-avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Description(value = "上传头像")
-    public Result<?> uploadAvatar(){
-        return null;
+    public Result<?> uploadAvatar(@RequestParam("file") MultipartFile file){
+        return usersService.uploadAvatar(file);
     }
 }

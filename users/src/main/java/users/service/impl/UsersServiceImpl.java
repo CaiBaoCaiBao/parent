@@ -3,6 +3,7 @@ package users.service.impl;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import common.client.FileClient;
 import common.context.UserContext;
 import common.dict.DictConstants;
 import common.enums.ResultCode;
@@ -15,6 +16,7 @@ import org.apache.catalina.User;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import users.mapper.UserProfileMapper;
 import users.mapper.UsersMapper;
 import users.pojo.dto.*;
@@ -36,6 +38,8 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
     UsersMapper usersMapper;
     @Autowired
     UserProfileMapper userProfileMapper;
+    @Autowired
+    FileClient fileClient;
 
     @Override
     public Result<?> saveUser(SaveUserDTO saveUserDTO) {
@@ -213,5 +217,36 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
             return Result.error(ResultCode.DATABASE_OPERATION_FAILED.getCode(), "更新用户状态失败");
         }
         return Result.success("用户状态更新成功");
+    }
+
+    @Override
+    public Result<?> uploadAvatar(MultipartFile file) {
+        // 查询当前用户是否存在
+        String currentUserUUid = UserContext.getUserUUid();
+        if (currentUserUUid == null || currentUserUUid.isEmpty()) {
+            return Result.error(ResultCode.UNAUTHORIZED.getCode(), "身份错误，无操作权限");
+        }
+        Wrapper<Users> wrapper = new QueryWrapper<Users>().eq("u_uid", currentUserUUid);
+        Users currentUser = usersMapper.selectOne(wrapper);
+        if (currentUser == null) {
+            return Result.error(ResultCode.DATA_NOT_FOUND.getCode(), "用户不存在");
+        }
+        Result<?> fileResult =  fileClient.uploadImg(file);
+        // 判断调用是否成功
+        if (fileResult != null && fileResult.getSuccess()) {
+            // 获取返回的文件URL
+            String fileUrl = (String) fileResult.getData();
+            Wrapper<UserProfile> queryWrapper = new QueryWrapper<UserProfile>().eq("u_uid", currentUserUUid);
+            UserProfile userProfile = userProfileMapper.selectOne(queryWrapper);
+            userProfile.setAvatar(fileUrl);
+            int userProfileFlag = userProfileMapper.updateById(userProfile);
+            if(userProfileFlag != 1){
+                return Result.error(ResultCode.DATABASE_OPERATION_FAILED.getCode(), "更新用户头像失败");
+            }
+            log.info("上传成功: {}", fileUrl);
+            return Result.success("更新用户头像");
+        } else {
+            return fileResult;
+        }
     }
 }

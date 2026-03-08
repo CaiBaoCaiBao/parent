@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import common.utils.Result;
 import jakarta.validation.Valid;
 import org.springframework.context.annotation.Description;
+import org.springframework.web.multipart.MultipartFile;
 import users.pojo.dto.*;
 import users.pojo.entity.Users;
 
@@ -24,4 +25,7 @@ public interface UsersService extends IService<Users> {
 
     @Description(value = "更新用户状态")
     Result<?> updateUserStatus(@Valid UpdateUserStatusDTO updateUserStatusDTO);
+
+    @Description(value = "上传头像")
+    Result<?> uploadAvatar(MultipartFile file);
 }

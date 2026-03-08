@@ -31,6 +31,7 @@
         <java.version>17</java.version>
         <nacos-discovery.version>2025.0.0.0</nacos-discovery.version>
         <jbcrypt.version>0.4</jbcrypt.version>
+        <feign-form.version>3.8.0</feign-form.version>
     </properties>
     <dependencies>
         <dependency>
@@ -76,6 +77,12 @@
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
             <version>${jbcrypt.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.openfeign.form</groupId>
+            <artifactId>feign-form-spring</artifactId>
+            <version>${feign-form.version}</version>
         </dependency>
 
         <dependency>
