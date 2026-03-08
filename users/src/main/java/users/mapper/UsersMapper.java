@@ -17,4 +17,8 @@ public interface UsersMapper extends BaseMapper<Users> {
 
     @Description("获取用户信息")
     UserInfoVo getUserInfo(String uUid);
+
+    @Description("更新用户信息")
+    int updateUser(Users users);
+
 }

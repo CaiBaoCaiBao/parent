@@ -10,7 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableDiscoveryClient
 @EnableUnifiedResponse
 @SpringBootApplication
-@EnableFeignClients
+@EnableFeignClients(basePackages = {"users", "common"})
 @ComponentScan(basePackages = {"users", "common"})
 public class UsersApplication {
 

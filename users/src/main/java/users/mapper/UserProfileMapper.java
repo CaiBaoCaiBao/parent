@@ -6,4 +6,5 @@ import users.pojo.entity.UserProfile;
 
 @Mapper
 public interface UserProfileMapper extends BaseMapper<UserProfile> {
+    int updateByUid(UserProfile userProfile);
 }

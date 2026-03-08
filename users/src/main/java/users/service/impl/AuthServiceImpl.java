@@ -15,7 +15,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import users.client.NotificationClient;
+import common.client.NotificationClient;
 import users.mapper.UserProfileMapper;
 import users.mapper.UsersMapper;
 import users.pojo.dto.ForgotPasswordDTO;

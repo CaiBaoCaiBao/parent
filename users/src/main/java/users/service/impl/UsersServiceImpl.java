@@ -17,10 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import users.mapper.UserProfileMapper;
 import users.mapper.UsersMapper;
-import users.pojo.dto.CreateAdminDTO;
-import users.pojo.dto.DeleteUserDTO;
-import users.pojo.dto.QueryUserListDTO;
-import users.pojo.dto.SaveUserDTO;
+import users.pojo.dto.*;
 import users.pojo.entity.UserProfile;
 import users.pojo.entity.Users;
 import users.pojo.vo.UserInfoVo;
@@ -42,7 +39,28 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
 
     @Override
     public Result<?> saveUser(SaveUserDTO saveUserDTO) {
-        return null;
+        String currentUserUUid = UserContext.getUserUUid();
+        if (currentUserUUid == null || currentUserUUid.isEmpty()) {
+            return Result.error(ResultCode.UNAUTHORIZED.getCode(), "身份错误，无操作权限");
+        }
+        Wrapper<Users> wrapper = new QueryWrapper<Users>().eq("u_uid", currentUserUUid);
+        Users currentUser = usersMapper.selectOne(wrapper);
+        if (currentUser == null) {
+            return Result.error(ResultCode.DATA_NOT_FOUND.getCode(), "用户不存在");
+        }
+        if (currentUser.getStatus().equals(DictConstants.UserStatus.INACTIVE)) {
+            return Result.error(ResultCode.ACCOUNT_DISABLED.getCode(), "账号已被禁用，无法执行此操作");
+        }
+        UserProfile  userProfile = new UserProfile();
+        userProfile.setUUid(currentUserUUid);
+        userProfile.setNickName(saveUserDTO.getNickName());
+        userProfile.setAvatar(saveUserDTO.getAvatar());
+        userProfile.setBio(saveUserDTO.getBio());
+        int profileFlag = userProfileMapper.updateByUid(userProfile);
+        if(profileFlag != 1){
+            return Result.error(ResultCode.DATABASE_OPERATION_FAILED.getCode(), "更新资料失败");
+        }
+        return Result.success("更新成功");
     }
 
     @Override
@@ -160,5 +178,40 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         }
         log.info("用户: {}创建管理员:{}", currentUserUUid,ulidStr);
         return Result.success("创建成功");
+    }
+
+    @Override
+    public Result<?> updateUserStatus(UpdateUserStatusDTO updateUserStatusDTO) {
+        // 查询当前用户是否存在
+        String currentUserUUid = UserContext.getUserUUid();
+        if (currentUserUUid == null || currentUserUUid.isEmpty()) {
+            return Result.error(ResultCode.UNAUTHORIZED.getCode(), "身份错误，无操作权限");
+        }
+        Wrapper<Users> wrapper = new QueryWrapper<Users>().eq("u_uid", currentUserUUid);
+        Users currentUser = usersMapper.selectOne(wrapper);
+        if (currentUser == null) {
+            return Result.error(ResultCode.DATA_NOT_FOUND.getCode(), "用户不存在");
+        }
+        // 检查当前用户是否是管理员
+        if (!currentUser.getRole().equals(DictConstants.UserRole.ADMIN)) {
+            return Result.error(ResultCode.VALIDATE_FAILED.getCode(), "身份错误，无操作权限");
+        }
+        // 检查用户状态是否合法
+        if (!DictConstants.UserStatus.ACTIVE.equals(updateUserStatusDTO.getStatus())) {
+            return Result.error(ResultCode.ACCOUNT_DISABLED.getCode(), "账户处于禁用状态，无法执行此操作");
+        }
+        // 检查updateUserStatusDTO的uUid是否存在
+        Wrapper<Users> queryWrapper = new QueryWrapper<Users>().eq("u_uid", updateUserStatusDTO.getUUid());;
+        Users users = usersMapper.selectOne(queryWrapper);
+        if (users == null) {
+            return Result.error(ResultCode.DATA_NOT_FOUND.getCode(), "用户不存在");
+        }
+        // 更新用户状态
+        users.setStatus(updateUserStatusDTO.getStatus());
+        int userFlag = usersMapper.updateById(users);
+        if(userFlag != 1){
+            return Result.error(ResultCode.DATABASE_OPERATION_FAILED.getCode(), "更新用户状态失败");
+        }
+        return Result.success("用户状态更新成功");
     }
 }

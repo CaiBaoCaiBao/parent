@@ -1,4 +1,4 @@
-package notification;
+package file;
 
 import common.interfaces.EnableUnifiedResponse;
 import org.springframework.boot.SpringApplication;
@@ -10,12 +10,12 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableDiscoveryClient
 @EnableUnifiedResponse
 @SpringBootApplication
-@EnableFeignClients(basePackages = {"notification", "common"})
-@ComponentScan(basePackages = {"notification", "common"})
-public class NotificationApplication {
+@EnableFeignClients(basePackages = {"file", "common"})
+@ComponentScan(basePackages = {"file", "common"})
+public class FileApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(NotificationApplication.class, args);
+        SpringApplication.run(FileApplication.class, args);
     }
 
 }

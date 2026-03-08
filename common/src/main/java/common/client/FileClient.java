@@ -1,4 +1,4 @@
-package users.client;
+package common.client;
 
 import common.config.FeignConfig;
 import common.constants.ClientInfo;
@@ -9,15 +9,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(
-        contextId= ClientInfo.NotificationService.SERVICE_CONTEXT_ID,
-        name= ClientInfo.NotificationService.SERVICE_NAME,
+        contextId= ClientInfo.FileService.SERVICE_CONTEXT_ID,
+        name= ClientInfo.FileService.SERVICE_NAME,
         configuration = FeignConfig.class
 )
-public interface NotificationClient {
-    @PostMapping("/notification/mail/trip-api/sendOtpMail")
+public interface FileClient {
+    @PostMapping("/file/trip-api/upload-avatar")
     @Description(value = "发送验证码邮件")
-    Result<?> sendOtpMail(
-            @RequestParam String email,
-            @RequestParam String template
-    );
+    Result<?> uploadAvatar();
 }

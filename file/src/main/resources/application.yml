@@ -1,0 +1,48 @@
+server:
+  port: 8003
+spring:
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
+  application:
+    name: file
+  config:
+    import: optional:nacos:${spring.application.name}
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848	#注册中心地址
+    openfeign:
+      client:
+        default-config: default
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tourwo
+    username: postgres
+    password: '040210'
+    driver-class-name: org.postgresql.Driver
+    # 推荐使用HikariCP连接池
+    type: com.zaxxer.hikari.HikariDataSource
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-not-delete-value: 0
+      logic-delete-value: 1
+
+logging:
+  config: classpath:file-logback.xml
+  level:
+    root: info
+    file: debug
+
+oss:
+  access-key: NkprvCVs0h2k7dG1zxTo7Q2Me_CrpCja5tPxgGu7
+  secret-key: OgRQ0n-oHVJBdEYEacZ_1zIhIGxhVJg13AN5nbV2
+  bucket: tourwo
+  domain: http://tbjbd6cen.hn-bkt.clouddn.com # 外链域名，每月月底更换

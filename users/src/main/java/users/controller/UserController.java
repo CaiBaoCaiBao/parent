@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import users.pojo.dto.CreateAdminDTO;
-import users.pojo.dto.DeleteUserDTO;
-import users.pojo.dto.QueryUserListDTO;
-import users.pojo.dto.SaveUserDTO;
+import users.pojo.dto.*;
 import users.service.UsersService;
 
 @RestController
@@ -44,5 +41,26 @@ public class UserController {
     @Description(value = "查询用户详情资料")
     public Result<?> detail(@RequestParam(value = "uid") String uUid){
         return usersService.getUserInfo(uUid);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/api/update")
+    @Description(value = "更新用户资料")
+    public Result<?> updateUserInfo(@RequestBody SaveUserDTO saveUserDTO){
+        return usersService.saveUser(saveUserDTO);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/api/update-status")
+    @Description(value = "更新用户状态")
+    public Result<?> updateStatus(@RequestBody @Valid UpdateUserStatusDTO updateUserStatusDTO){
+        return usersService.updateUserStatus(updateUserStatusDTO);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/api/upload-avatar")
+    @Description(value = "上传头像")
+    public Result<?> uploadAvatar(){
+        return null;
     }
 }

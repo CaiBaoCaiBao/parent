@@ -4,14 +4,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import common.utils.Result;
 import jakarta.validation.Valid;
 import org.springframework.context.annotation.Description;
-import users.pojo.dto.CreateAdminDTO;
-import users.pojo.dto.DeleteUserDTO;
-import users.pojo.dto.QueryUserListDTO;
-import users.pojo.dto.SaveUserDTO;
+import users.pojo.dto.*;
 import users.pojo.entity.Users;
 
 public interface UsersService extends IService<Users> {
-    @Description(value = "保存用户信息")
+    @Description(value = "更新用户资料")
     Result<?> saveUser(@Valid SaveUserDTO saveUserDTO);
 
     @Description(value = "批量删除用户")
@@ -24,4 +21,7 @@ public interface UsersService extends IService<Users> {
 
     @Description(value = "创建管理员")
     Result<?> createAdmin(@Valid CreateAdminDTO createAdminDTO);
+
+    @Description(value = "更新用户状态")
+    Result<?> updateUserStatus(@Valid UpdateUserStatusDTO updateUserStatusDTO);
 }

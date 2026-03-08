@@ -113,7 +113,7 @@
         <module>common</module>
         <module>users</module>
         <module>notification</module>
-        <!--        <module>file</module>-->
+        <module>file</module>
         <!--        <module>content</module>-->
     </modules>
 </project>

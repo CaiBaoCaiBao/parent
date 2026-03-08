@@ -44,4 +44,24 @@
         join user_profile up on u.u_uid = up.u_uid
         where u.u_uid = #{uUid}
     </select>
+
+    <update id="updateUser" parameterType="users.pojo.entity.Users">
+        UPDATE users
+        <set>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="role != null and role != ''">
+                role = #{role},
+            </if>
+            <if test="status != null and status != ''">
+                status = #{status},
+            </if>
+            updated_at = NOW()
+        </set>
+        WHERE u_uid = #{uUid} AND deleted = 0
+    </update>
 </mapper>
