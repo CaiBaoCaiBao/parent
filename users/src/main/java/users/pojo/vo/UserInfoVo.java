@@ -16,6 +16,7 @@ public class UserInfoVo {
     private String role;
     private String status;
     private String bio;
+    private String phone;
     private LocalDate birthday;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

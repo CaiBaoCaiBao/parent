@@ -18,4 +18,7 @@ public interface AuthService extends IService<Users> {
 
     @Description("忘记密码")
     Result<?> forgotPassword(@Valid ForgotPasswordDTO forgotPasswordDTO);
+
+    @Description("刷新Token")
+    Result<?> refreshToken(String authorization);
 }

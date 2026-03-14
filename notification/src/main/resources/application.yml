@@ -27,7 +27,7 @@ spring:
       discovery:
         server-addr: localhost:8848	#注册中心地址
   datasource:
-    url: jdbc:postgresql://localhost:5432/tourwo
+    url: jdbc:postgresql://localhost:5432/trip
     username: postgres
     password: '040210'
     driver-class-name: org.postgresql.Driver
@@ -69,4 +69,4 @@ logging:
   config: classpath:notification-logback.xml
   level:
     root: info
-    notification: debug
+    users: debug

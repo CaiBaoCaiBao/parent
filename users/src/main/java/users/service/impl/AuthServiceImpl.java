@@ -306,4 +306,78 @@ public class AuthServiceImpl extends ServiceImpl<UsersMapper, Users> implements 
         log.info("用户忘记密码成功: {}", email);
         return Result.success("忘记密码成功");
     }
+
+    @Override
+    public Result<?> refreshToken(String authorization) {
+        // 提取 Bearer Token
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
+            log.warn("刷新Token失败: Authorization header 格式错误");
+            return Result.error(ResultCode.VALIDATE_FAILED.getCode(), "Authorization header 格式错误");
+        }
+
+        String refreshToken = authorization.substring(7);
+
+        try {
+            // 解析 Refresh Token
+            Map<String, Object> claims = jwtUtil.parseToken(refreshToken);
+            String tokenType = (String) claims.get("tokenType");
+
+            // 验证是否为 Refresh Token
+            if (!"refresh".equals(tokenType)) {
+                log.warn("刷新Token失败: Token类型错误");
+                return Result.error(ResultCode.VALIDATE_FAILED.getCode(), "Token类型错误");
+            }
+
+            String userId = (String) claims.get("sub");
+            String jti = (String) claims.get("jti");
+
+            // 从 Redis 中验证 Refresh Token 是否存在
+            String redisKey = RedisKey.REFRESH_TOKEN.getKey() + userId + ":" + jti;
+            String storedToken = redisUtil.get(redisKey).toString();
+
+            if (storedToken == null || !storedToken.equals(refreshToken)) {
+                log.warn("刷新Token失败: RefreshToken 不存在或已失效");
+                return Result.error(ResultCode.TOKEN_INVALID.getCode(), "RefreshToken 不存在或已失效");
+            }
+
+            // 查询用户信息
+            Users user = usersMapper.selectOne(new QueryWrapper<Users>().eq("u_uid", userId).eq("deleted", 0));
+            if (user == null) {
+                log.warn("刷新Token失败: 用户不存在");
+                return Result.error(ResultCode.USER_NOT_FOUND.getCode(), "用户不存在");
+            }
+
+            // 验证用户状态
+            if (!Objects.equals(user.getStatus(), DictConstants.UserStatus.ACTIVE)) {
+                log.warn("刷新Token失败: 账号已被禁用");
+                return Result.error(ResultCode.ACCOUNT_DISABLED.getCode(), "账号已被禁用");
+            }
+
+            // 查询用户资料
+            UserProfile userProfile = userProfileMapper.selectOne(new QueryWrapper<UserProfile>().eq("u_uid", user.getUUid()));
+            if (userProfile == null) {
+                return Result.error(ResultCode.VALIDATE_FAILED.getCode(), "用户资料不存在");
+            }
+
+            // 生成新的 Access Token
+            AccessPayload accessPayload = new AccessPayload();
+            accessPayload.setUUid(user.getUUid());
+            accessPayload.setUserName(user.getUserName());
+            accessPayload.setRole(user.getRole());
+            accessPayload.setAvatar(userProfile.getAvatar());
+            accessPayload.setNickName(userProfile.getNickName());
+            accessPayload.setEmail(user.getEmail());
+            accessPayload.setStatus(user.getStatus());
+            accessPayload.setJit(UlidCreator.getUlid().toString());
+            Map<String, Object> accessClaims = jwtUtil.setAccessClaims(accessPayload);
+            String newAccessToken = jwtUtil.generateToken(accessClaims);
+
+            log.info("刷新Token成功: {}", user.getUserName());
+            return Result.success("刷新Token成功", Map.of("accessToken", newAccessToken));
+
+        } catch (Exception e) {
+            log.error("刷新Token失败: {}", e.getMessage());
+            return Result.error(ResultCode.TOKEN_INVALID.getCode(), "Token无效或已过期");
+        }
+    }
 }

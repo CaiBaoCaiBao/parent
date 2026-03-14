@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Primary;
 
 /**
  * @FeignClient(name = "user-service", configuration = FeignConfig.class)
- * public interface UserClient {
+ * public interface UsersClient {
  *     // 就像调用本地 Service 一样，直接返回 User
  *     @GetMapping("/users/{id}")
  *     User getUser(@PathVariable("id") Long id);

@@ -3,16 +3,18 @@ package users.service.impl;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import common.client.ContentClient;
 import common.client.FileClient;
+import common.common.AccessPayload;
 import common.context.UserContext;
 import common.dict.DictConstants;
 import common.enums.ResultCode;
+import common.utils.JwtUtil;
 import common.utils.PinyinUtil;
 import common.utils.Result;
 import common.utils.ULIDUtils;
-import common.utils.Verification;
+import com.github.f4b6a3.ulid.UlidCreator;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,13 +24,16 @@ import users.mapper.UsersMapper;
 import users.pojo.dto.*;
 import users.pojo.entity.UserProfile;
 import users.pojo.entity.Users;
+import users.pojo.vo.LoginResponse;
 import users.pojo.vo.UserInfoVo;
 import users.pojo.vo.UserListVo;
 import users.service.UsersService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Slf4j
@@ -40,6 +45,10 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
     UserProfileMapper userProfileMapper;
     @Autowired
     FileClient fileClient;
+    @Autowired
+    ContentClient contentClient;
+    @Autowired
+    JwtUtil jwtUtil;
 
     @Override
     public Result<?> saveUser(SaveUserDTO saveUserDTO) {
@@ -60,11 +69,34 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         userProfile.setNickName(saveUserDTO.getNickName());
         userProfile.setAvatar(saveUserDTO.getAvatar());
         userProfile.setBio(saveUserDTO.getBio());
+        userProfile.setPhone(saveUserDTO.getPhone());
+
+        // 处理生日字段转换
+        userProfile.setBirthday(saveUserDTO.getBirthday());
+
         int profileFlag = userProfileMapper.updateByUid(userProfile);
         if(profileFlag != 1){
             return Result.error(ResultCode.DATABASE_OPERATION_FAILED.getCode(), "更新资料失败");
         }
-        return Result.success("更新成功");
+
+        // 重新生成 accessToken
+        AccessPayload accessPayload = new AccessPayload();
+        accessPayload.setUUid(currentUser.getUUid());
+        accessPayload.setUserName(currentUser.getUserName());
+        accessPayload.setRole(currentUser.getRole());
+        accessPayload.setAvatar(saveUserDTO.getAvatar());
+        accessPayload.setNickName(saveUserDTO.getNickName());
+        accessPayload.setEmail(currentUser.getEmail());
+        accessPayload.setStatus(currentUser.getStatus());
+        accessPayload.setJit(UlidCreator.getUlid().toString());
+
+        Map<String, Object> accessClaims = jwtUtil.setAccessClaims(accessPayload);
+        String newAccessToken = jwtUtil.generateToken(accessClaims);
+
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setAccessToken(newAccessToken);
+
+        return Result.success("更新成功", loginResponse);
     }
 
     @Override
@@ -118,14 +150,54 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         if(Objects.equals(currentStatus, DictConstants.UserStatus.INACTIVE)){ // 用户状态为禁用，无法查询
             return Result.error(ResultCode.ACCOUNT_DISABLED.getCode(),"账号已被禁用，无法执行此操作");
         }
-        // 先查询用户信息
-        UserInfoVo userInfoVo = usersMapper.getUserInfo(uUid);
+        // 先查询用户信息（使用 uUid 查询）
+        UserInfoVo userInfoVo = usersMapper.getUserInfoByUUid(uUid);
         // 检查用户是否存在
         if (userInfoVo == null) {
             return Result.error(ResultCode.DATA_NOT_FOUND.getCode(), "用户不存在");
         }
         String currentRole = UserContext.getRole();
         // 用户角色不能查询管理员
+        if(Objects.equals(userInfoVo.getRole(), DictConstants.UserRole.ADMIN) &&
+                Objects.equals(currentRole, DictConstants.UserRole.USER)){
+            return Result.error(ResultCode.VALIDATE_FAILED.getCode(),"没有权限查看该用户");
+        }
+        return Result.success(userInfoVo);
+    }
+
+    @Override
+    public Result<?> getUserInfoByUserName(String userName) {
+        // 检查当前用户状态
+        String currentStatus = UserContext.getStatus();
+        if(Objects.equals(currentStatus, DictConstants.UserStatus.INACTIVE)){ // 用户状态为禁用，无法查询
+            return Result.error(ResultCode.ACCOUNT_DISABLED.getCode(),"账号已被禁用，无法执行此操作");
+        }
+        // 先查询用户信息（使用 userName 查询）
+        UserInfoVo userInfoVo = usersMapper.getUserInfoByUserName(userName);
+        // 检查用户是否存在
+        if (userInfoVo == null) {
+            return Result.error(ResultCode.DATA_NOT_FOUND.getCode(), "用户不存在");
+        }
+        String currentRole = UserContext.getRole();
+        // 用户角色不能查询管理员
+        if(Objects.equals(userInfoVo.getRole(), DictConstants.UserRole.ADMIN) &&
+                Objects.equals(currentRole, DictConstants.UserRole.USER)){
+            return Result.error(ResultCode.VALIDATE_FAILED.getCode(),"没有权限查看该用户");
+        }
+        return Result.success(userInfoVo);
+    }
+
+    @Override
+    public Result<?> getUserInfoByUUid(String uUid) {
+        String currentStatus = UserContext.getStatus();
+        if(Objects.equals(currentStatus, DictConstants.UserStatus.INACTIVE)){
+            return Result.error(ResultCode.ACCOUNT_DISABLED.getCode(),"账号已被禁用，无法执行此操作");
+        }
+        UserInfoVo userInfoVo = usersMapper.getUserInfoByUUid(uUid);
+        if (userInfoVo == null) {
+            return Result.error(ResultCode.DATA_NOT_FOUND.getCode(), "用户不存在");
+        }
+        String currentRole = UserContext.getRole();
         if(Objects.equals(userInfoVo.getRole(), DictConstants.UserRole.ADMIN) &&
                 Objects.equals(currentRole, DictConstants.UserRole.USER)){
             return Result.error(ResultCode.VALIDATE_FAILED.getCode(),"没有权限查看该用户");
@@ -248,5 +320,113 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         } else {
             return fileResult;
         }
+    }
+
+    @Override
+    public Result<?> getMyProfile() {
+        String currentUserUUid = UserContext.getUserUUid();
+        if (currentUserUUid == null || currentUserUUid.isEmpty()) {
+            return Result.error(ResultCode.UNAUTHORIZED.getCode(), "身份错误，无操作权限");
+        }
+        return getUserInfoByUUid(currentUserUUid);
+    }
+
+    @Override
+    public Result<?> getMyTravelNotes(Integer pageNum, Integer pageSize) {
+        String currentUserUUid = UserContext.getUserUUid();
+        if (currentUserUUid == null || currentUserUUid.isEmpty()) {
+            return Result.error(ResultCode.UNAUTHORIZED.getCode(), "身份错误，无操作权限");
+        }
+        String currentStatus = UserContext.getStatus();
+        if (Objects.equals(currentStatus, DictConstants.UserStatus.INACTIVE)) {
+            return Result.error(ResultCode.ACCOUNT_DISABLED.getCode(), "账号已被禁用，无法执行此操作");
+        }
+        // 调用内容服务查询当前用户的游记列表
+        Result<?> result = contentClient.queryTravelNoteList(currentUserUUid, pageNum, pageSize);
+        return result;
+    }
+
+    @Override
+    public Result<?> getBatchUserInfo(List<String> uids) {
+        if (uids == null || uids.isEmpty()) {
+            return Result.error(ResultCode.PARAM_ERROR.getCode(), "用户ID列表不能为空");
+        }
+        // 批量查询用户信息
+        List<UserInfoVo> userInfoList = usersMapper.getBatchUserInfo(uids);
+        return Result.success(userInfoList);
+    }
+
+    @Override
+    public Result<?> resetPassword(ResetPasswordDTO resetPasswordDTO) {
+        // 获取当前登录用户信息
+        String currentUserUUid = UserContext.getUserUUid();
+        String currentRole = UserContext.getRole();
+        String currentStatus = UserContext.getStatus();
+
+        if (currentUserUUid == null || currentUserUUid.isEmpty()) {
+            return Result.error(ResultCode.UNAUTHORIZED.getCode(), "身份错误，无操作权限");
+        }
+
+        // 只有管理员才能重置密码
+        if (!DictConstants.UserRole.ADMIN.equals(currentRole)) {
+            return Result.error(ResultCode.VALIDATE_FAILED.getCode(), "只有管理员才能重置密码");
+        }
+
+        // 检查当前用户状态
+        if (Objects.equals(currentStatus, DictConstants.UserStatus.INACTIVE)) {
+            return Result.error(ResultCode.ACCOUNT_DISABLED.getCode(), "账号已被禁用，无法执行此操作");
+        }
+
+        // 验证两次密码是否一致
+        if (!resetPasswordDTO.getNewPassword().equals(resetPasswordDTO.getConfirmPassword())) {
+            return Result.error(ResultCode.VALIDATE_FAILED.getCode(), "两次输入的密码不一致");
+        }
+
+        // 查询当前用户
+        QueryWrapper<Users> wrapper = new QueryWrapper<Users>().eq("u_uid", currentUserUUid);
+        Users currentUser = usersMapper.selectOne(wrapper);
+        if (currentUser == null) {
+            return Result.error(ResultCode.DATA_NOT_FOUND.getCode(), "用户不存在");
+        }
+
+        // 生成新密码的哈希值
+        String pwdHash = BCrypt.hashpw(resetPasswordDTO.getNewPassword(), BCrypt.gensalt());
+        currentUser.setPassword(pwdHash);
+
+        // 更新密码
+        int updateFlag = usersMapper.updateById(currentUser);
+        if (updateFlag != 1) {
+            log.warn("重置密码失败: 用户ID {}", currentUserUUid);
+            return Result.error(ResultCode.DATABASE_OPERATION_FAILED.getCode(), "重置密码失败");
+        }
+
+        log.info("管理员 {} 重置了自己的密码", currentUserUUid);
+        return Result.success("重置密码成功");
+    }
+
+    @Override
+    public Result<?> getUserCount() {
+        // 获取当前用户信息
+        String currentRole = UserContext.getRole();
+        String currentStatus = UserContext.getStatus();
+
+        // 只有管理员才能查看用户总数
+        if (!DictConstants.UserRole.ADMIN.equals(currentRole)) {
+            return Result.error(ResultCode.VALIDATE_FAILED.getCode(), "只有管理员才能查看用户总数");
+        }
+
+        // 检查当前用户状态
+        if (Objects.equals(currentStatus, DictConstants.UserStatus.INACTIVE)) {
+            return Result.error(ResultCode.ACCOUNT_DISABLED.getCode(), "账号已被禁用，无法执行此操作");
+        }
+
+        // 查询用户总数
+        QueryWrapper<Users> wrapper = new QueryWrapper<>();
+        Long userCount = usersMapper.selectCount(wrapper);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("userCount", userCount);
+
+        return Result.success(result);
     }
 }

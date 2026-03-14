@@ -120,7 +120,6 @@ public class JwtUtil {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .setSubject("jwt")
                 .signWith(getPrivateKey(), SignatureAlgorithm.RS256)
                 .compact();
     }
@@ -168,12 +167,26 @@ public class JwtUtil {
         accessClaim.put("role",payload.getRole()); // 角色
         accessClaim.put("email",payload.getEmail()); // 邮箱
         accessClaim.put("jti",payload.getJit()); // jwt标识
-        accessClaim.put("userName",payload.getUserName()); // 用户名
+        accessClaim.put("userName",encodeChinese(payload.getUserName())); // 用户名
         accessClaim.put("avatar",payload.getAvatar()); // 头像
         accessClaim.put("status",payload.getStatus());  // 用户状态
-        accessClaim.put("nickName",payload.getNickName()); // 用户昵称
+        accessClaim.put("nickName",encodeChinese(payload.getNickName())); // 用户昵称
         accessClaim.put("tokenType","access");
         return  accessClaim;
+    }
+
+    /**
+     * 对包含中文的字符串进行 Base64 编码
+     */
+    private String encodeChinese(String value) {
+        if (value == null || value.isEmpty()) {
+            return value;
+        }
+        // 检查是否包含中文字符
+        if (value.matches(".*[\\u4e00-\\u9fa5].*")) {
+            return Base64.getEncoder().encodeToString(value.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        }
+        return value;
     }
 
     @Description("生成刷新token负载")

@@ -2,7 +2,6 @@ package users.controller;
 
 import common.utils.Result;
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.http.MediaType;
@@ -12,8 +11,10 @@ import org.springframework.web.multipart.MultipartFile;
 import users.pojo.dto.*;
 import users.service.UsersService;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/users/user")
+@RequestMapping("/user")
 public class UserController {
     @Autowired
     UsersService usersService;
@@ -42,8 +43,8 @@ public class UserController {
     @Transactional(rollbackFor = Exception.class)
     @GetMapping("/api/info")
     @Description(value = "查询用户详情资料")
-    public Result<?> detail(@RequestParam(value = "uid") String uUid){
-        return usersService.getUserInfo(uUid);
+    public Result<?> detail(@RequestParam(value = "userName") String userName){
+        return usersService.getUserInfoByUserName(userName);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -65,5 +66,41 @@ public class UserController {
     @Description(value = "上传头像")
     public Result<?> uploadAvatar(@RequestParam("file") MultipartFile file){
         return usersService.uploadAvatar(file);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @GetMapping("/api/my-profile")
+    @Description(value = "获取当前用户个人资料详情")
+    public Result<?> getMyProfile(){
+        return usersService.getMyProfile();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @GetMapping("/api/my-travel-notes")
+    @Description(value = "获取当前用户发布的游记列表")
+    public Result<?> getMyTravelNotes(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+                                       @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize){
+        return usersService.getMyTravelNotes(pageNum, pageSize);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @GetMapping("/api/batch-info")
+    @Description(value = "批量获取用户信息")
+    public Result<?> getBatchUserInfo(@RequestParam("uids") List<String> uids){
+        return usersService.getBatchUserInfo(uids);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/api/reset-password")
+    @Description(value = "重置用户密码")
+    public Result<?> resetPassword(@RequestBody @Valid ResetPasswordDTO resetPasswordDTO){
+        return usersService.resetPassword(resetPasswordDTO);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @GetMapping("/api/count")
+    @Description(value = "获取用户总数")
+    public Result<?> getUserCount(){
+        return usersService.getUserCount();
     }
 }

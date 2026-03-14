@@ -26,6 +26,11 @@ public enum ResultCode {
     VALIDATE_FAILED(400, "参数校验失败"),
 
     /**
+     * 参数错误
+     */
+    PARAM_ERROR(401, "参数错误"),
+
+    /**
      * 未授权
      */
     UNAUTHORIZED(401, "未授权，请先登录"),

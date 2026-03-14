@@ -12,3 +12,17 @@ spring:
           max-idle: 8
           max-wait: -1ms
           max-active: 8
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+      force-request: true
+      force-response: true
+
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true

@@ -114,7 +114,8 @@
         <module>users</module>
         <module>notification</module>
         <module>file</module>
-        <!--        <module>content</module>-->
+        <module>content</module>
+        <module>social</module>
     </modules>
 </project>
 

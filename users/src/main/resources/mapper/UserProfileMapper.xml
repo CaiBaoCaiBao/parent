@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="users.mapper.UserProfileMapper">
+    <update id="updateByUid">
+        UPDATE user_profile
+        <set>
+            <if test="nickName != null and nickName != ''">
+                nick_name = #{nickName},
+            </if>
+            <if test="idCard != null and idCard != ''">
+                id_card = #{idCard},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="avatar != null">
+                avatar = #{avatar},
+            </if>
+            <if test="bio != null">
+                bio = #{bio},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday},
+            </if>
+            updated_at = NOW()
+        </set>
+        WHERE u_uid = #{uUid} AND deleted = 0
+    </update>
+
     <update id="updateUserProfile">
         UPDATE user_profile
         <set>
