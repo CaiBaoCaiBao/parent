@@ -39,4 +39,6 @@ public class CreateTicketDTO {
     private String description;    // 描述
 
     private Integer sortOrder;     // 排序
+
+    private Integer status;        // 状态：1-启用，0-禁用
 }

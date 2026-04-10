@@ -7,5 +7,5 @@ import java.util.List;
 @Data
 @Description("删除用户DTO")
 public class DeleteUserDTO {
-    private List<String> uUids;
+    private List<String> uuids;
 }

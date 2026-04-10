@@ -13,7 +13,7 @@ import java.util.List;
 public class UpdatePlayItemDTO {
 
     @NotBlank(message = "游玩项目ID不能为空")
-    private String aid;           // 游玩项目ID
+    private String piid;          // 游玩项目ID
 
     private String name;          // 游玩项目名称
     private String attractionId;  // 景点ID
@@ -28,4 +28,6 @@ public class UpdatePlayItemDTO {
     private BigDecimal price;     // 价格
     @AmountFormat(scale = 2)
     private BigDecimal discountPrice; // 折扣价格
+
+    private Integer status;       // 状态：1-启用，0-禁用
 }

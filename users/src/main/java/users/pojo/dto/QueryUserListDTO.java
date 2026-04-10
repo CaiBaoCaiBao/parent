@@ -10,4 +10,6 @@ public class QueryUserListDTO {
     private String status;
     private String role;
     private String email;
+    private Integer pageNum;
+    private Integer pageSize;
 }

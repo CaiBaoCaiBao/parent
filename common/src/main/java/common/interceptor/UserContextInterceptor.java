@@ -74,12 +74,12 @@ public class UserContextInterceptor implements HandlerInterceptor {
             String role = request.getHeader(HEADER_ROLE);
             String status = request.getHeader(HEADER_STATUS);
 
-            log.debug("请求头信息 - X-User-Uuid: {}, X-User-Username: {}, X-User-Role: {}",
+            log.info("请求头信息 - X-User-Uuid: {}, X-User-Username: {}, X-User-Role: {}",
                     userUid, userName, role);
 
             // 如果没有用户ID，说明是游客访问或未登录
             if (userUid == null || userUid.isEmpty()) {
-                log.debug("请求未携带用户信息，游客访问: {}", requestUri);
+                log.info("请求未携带用户信息，游客访问: {}", requestUri);
                 return true;
             }
 
@@ -104,7 +104,7 @@ public class UserContextInterceptor implements HandlerInterceptor {
             // 设置到上下文
             UserContext.setUserInfo(userInfo);
 
-            log.debug("用户上下文已设置: uUid={}, username={}, role={}", uUid, userInfo.getUserName(), userInfo.getRole());
+            log.info("用户上下文已设置: uUid={}, username={}, role={}", uUid, userInfo.getUserName(), userInfo.getRole());
         } catch (Exception e) {
             log.error("设置用户上下文失败", e);
         }

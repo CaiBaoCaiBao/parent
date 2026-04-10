@@ -237,7 +237,7 @@ public class AuthServiceImpl extends ServiceImpl<UsersMapper, Users> implements 
             }
         }
 
-        String ulidStr = ULIDUtils.generateULID();
+        String ulidStr = "USER_" + ULIDUtils.generateULID();
         // 生成密码哈希
         String pwdHash = BCrypt.hashpw(password, BCrypt.gensalt());
 

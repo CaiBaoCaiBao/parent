@@ -24,4 +24,10 @@ public interface DestinationService extends IService<Destination> {
     Result<?> updateDestination(@Valid UpdateDestinationDTO dto);
     @Description("获取目的地详情")
     Result<DestinationDetailVO> getDestinationDetail(@Valid GetDestinationDetailDTO dto);
+
+    @Description("批量获取目的地详情")
+    Result<?> getBatchDestinationDetail(java.util.List<String> destinationIds);
+
+    @Description("增加目的地浏览数")
+    Result<?> incrementViewCount(String destinationId);
 }

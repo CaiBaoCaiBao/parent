@@ -11,5 +11,5 @@ import java.util.List;
 public class DeletePlayItemDTO {
 
     @NotEmpty(message = "游玩项目ID列表不能为空")
-    private List<String> aids;  // 游玩项目ID列表
+    private List<String> piids;  // 游玩项目ID列表
 }

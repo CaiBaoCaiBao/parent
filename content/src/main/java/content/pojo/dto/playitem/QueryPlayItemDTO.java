@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Description;
 @Description("查询游玩项目DTO")
 public class QueryPlayItemDTO {
 
-    private String aid;           // 游玩项目ID
+    private String piid;          // 游玩项目ID
     private String attractionId;  // 景点ID
     private String name;          // 名称（模糊查询）
     private Integer status;       // 状态

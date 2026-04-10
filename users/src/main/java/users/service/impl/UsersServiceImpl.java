@@ -111,17 +111,17 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
             return Result.error(ResultCode.ACCOUNT_DISABLED.getCode(), "账号已被禁用，无法执行此操作");
         }
         String currentUserUUid = UserContext.getUserUUid();
-        List<String> uUids = deleteUserDTO.getUUids();
+        List<String> uuids = deleteUserDTO.getUuids();
         // 从列表中排除当前用户
-        List<String> filteredUUids = uUids.stream()
-                .filter(uUid -> !uUid.equals(currentUserUUid))
+        List<String> filteredUuids = uuids.stream()
+                .filter(uuid -> !uuid.equals(currentUserUUid))
                 .toList();
         // 如果过滤后为空，说明要删除的都是自己
-        if (filteredUUids.isEmpty()) {
+        if (filteredUuids.isEmpty()) {
             return Result.error(ResultCode.DATA_OPERATION_FAILED.getCode(),"不能对自己执行此操作");
         }
         // 执行批量删除
-        boolean result = remove(new QueryWrapper<Users>().in("u_uid", filteredUUids));
+        boolean result = remove(new QueryWrapper<Users>().in("u_uid", filteredUuids));
         if (!result) {
             return Result.error(ResultCode.DATABASE_OPERATION_FAILED.getCode(),"删除失败");
         }
@@ -139,8 +139,35 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         if(Objects.equals(currentStatus, DictConstants.UserStatus.INACTIVE)){ // 用户状态为禁用，无法查询
             return Result.error(ResultCode.ACCOUNT_DISABLED.getCode(),"账号已被禁用，无法执行此操作");
         }
+
+        // 设置默认分页参数
+        if (queryUserListDTO.getPageNum() == null || queryUserListDTO.getPageNum() < 1) {
+            queryUserListDTO.setPageNum(1);
+        }
+        if (queryUserListDTO.getPageSize() == null || queryUserListDTO.getPageSize() < 1) {
+            queryUserListDTO.setPageSize(10);
+        }
+
+        // 查询用户列表
         List<UserListVo> userListVos = usersMapper.queryUserList(queryUserListDTO);
-        return Result.success(userListVos);
+
+        // 添加调试日志
+        if (!userListVos.isEmpty()) {
+            UserListVo firstUser = userListVos.get(0);
+            log.info("查询到 {} 个用户", userListVos.size());
+            log.info("第一个用户 - uUid: {}, userName: {}, email: {}", 
+                firstUser.getUUid(), firstUser.getUserName(), firstUser.getEmail());
+        }
+
+        // 构建分页结果
+        Map<String, Object> result = new HashMap<>();
+        result.put("records", userListVos);
+        result.put("total", userListVos.size());
+        result.put("size", queryUserListDTO.getPageSize());
+        result.put("current", queryUserListDTO.getPageNum());
+        result.put("pages", (int) Math.ceil((double) userListVos.size() / queryUserListDTO.getPageSize()));
+
+        return Result.success(result);
     }
 
     @Override
@@ -226,7 +253,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         if (usersMapper.selectCount(queryWrapper) > 0) {
             return Result.error(ResultCode.VALIDATE_FAILED.getCode(), "邮箱地址已存在");
         }
-        String ulidStr = ULIDUtils.generateULID();
+        String ulidStr = "USER_" + ULIDUtils.generateULID();
         String namePinyin = PinyinUtil.toPinyin(createAdminDTO.getUserName());
         // 格式化当前日期
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
@@ -258,6 +285,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
 
     @Override
     public Result<?> updateUserStatus(UpdateUserStatusDTO updateUserStatusDTO) {
+        log.info("updateUserStatusDTO: {}", updateUserStatusDTO);
         // 查询当前用户是否存在
         String currentUserUUid = UserContext.getUserUUid();
         if (currentUserUUid == null || currentUserUUid.isEmpty()) {
@@ -272,15 +300,31 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         if (!currentUser.getRole().equals(DictConstants.UserRole.ADMIN)) {
             return Result.error(ResultCode.VALIDATE_FAILED.getCode(), "身份错误，无操作权限");
         }
-        // 检查用户状态是否合法
-        if (!DictConstants.UserStatus.ACTIVE.equals(updateUserStatusDTO.getStatus())) {
-            return Result.error(ResultCode.ACCOUNT_DISABLED.getCode(), "账户处于禁用状态，无法执行此操作");
+        // 检查用户状态是否合法（使用数据库中的最新状态）
+        if (!DictConstants.UserStatus.ACTIVE.equals(currentUser.getStatus())) {
+            return Result.error(ResultCode.ACCOUNT_DISABLED.getCode(), "您的账户已被禁用，无法执行此操作。请联系其他管理员恢复您的账户状态。");
         }
-        // 检查updateUserStatusDTO的uUid是否存在
-        Wrapper<Users> queryWrapper = new QueryWrapper<Users>().eq("u_uid", updateUserStatusDTO.getUUid());;
+        // 检查是否尝试禁用自己
+        if (currentUserUUid.equals(updateUserStatusDTO.getUuid())) {
+            return Result.error(ResultCode.VALIDATE_FAILED.getCode(), "不能禁用自己的账户");
+        }
+        // 检查updateUserStatusDTO的uuid是否存在
+        log.info("查询目标用户，UUID: {}", updateUserStatusDTO.getUuid());
+        Wrapper<Users> queryWrapper = new QueryWrapper<Users>().eq("u_uid", updateUserStatusDTO.getUuid());
         Users users = usersMapper.selectOne(queryWrapper);
+        log.info("查询结果: {}", users);
         if (users == null) {
-            return Result.error(ResultCode.DATA_NOT_FOUND.getCode(), "用户不存在");
+            log.warn("目标用户不存在，UUID: {}", updateUserStatusDTO.getUuid());
+            return Result.error(ResultCode.DATA_NOT_FOUND.getCode(), "目标用户不存在");
+        }
+        // 检查目标用户是否是管理员（防止禁用其他管理员）
+        if (users.getRole().equals(DictConstants.UserRole.ADMIN)) {
+            return Result.error(ResultCode.VALIDATE_FAILED.getCode(), "不能禁用其他管理员账户");
+        }
+        // 验证状态值是否合法
+        if (!DictConstants.UserStatus.ACTIVE.equals(updateUserStatusDTO.getStatus()) &&
+            !DictConstants.UserStatus.INACTIVE.equals(updateUserStatusDTO.getStatus())) {
+            return Result.error(ResultCode.VALIDATE_FAILED.getCode(), "状态值无效，必须是 active 或 inactive");
         }
         // 更新用户状态
         users.setStatus(updateUserStatusDTO.getStatus());
@@ -288,6 +332,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         if(userFlag != 1){
             return Result.error(ResultCode.DATABASE_OPERATION_FAILED.getCode(), "更新用户状态失败");
         }
+        log.info("管理员 {} 将用户 {} 的状态更新为 {}", currentUserUUid, updateUserStatusDTO.getUuid(), updateUserStatusDTO.getStatus());
         return Result.success("用户状态更新成功");
     }
 
@@ -382,50 +427,102 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
             return Result.error(ResultCode.VALIDATE_FAILED.getCode(), "两次输入的密码不一致");
         }
 
-        // 查询当前用户
-        QueryWrapper<Users> wrapper = new QueryWrapper<Users>().eq("u_uid", currentUserUUid);
-        Users currentUser = usersMapper.selectOne(wrapper);
-        if (currentUser == null) {
-            return Result.error(ResultCode.DATA_NOT_FOUND.getCode(), "用户不存在");
+        // 查询目标用户
+        QueryWrapper<Users> wrapper = new QueryWrapper<Users>().eq("u_uid", resetPasswordDTO.getUuid());
+        Users targetUser = usersMapper.selectOne(wrapper);
+        if (targetUser == null) {
+            return Result.error(ResultCode.DATA_NOT_FOUND.getCode(), "目标用户不存在");
+        }
+
+        // 检查是否尝试重置自己的密码
+        if (currentUserUUid.equals(resetPasswordDTO.getUuid())) {
+            return Result.error(ResultCode.VALIDATE_FAILED.getCode(), "不能重置自己的密码，请使用修改密码功能");
+        }
+
+        // 检查目标用户是否是管理员
+        if (targetUser.getRole().equals(DictConstants.UserRole.ADMIN)) {
+            return Result.error(ResultCode.VALIDATE_FAILED.getCode(), "不能重置其他管理员的密码");
         }
 
         // 生成新密码的哈希值
         String pwdHash = BCrypt.hashpw(resetPasswordDTO.getNewPassword(), BCrypt.gensalt());
-        currentUser.setPassword(pwdHash);
+        targetUser.setPassword(pwdHash);
 
         // 更新密码
-        int updateFlag = usersMapper.updateById(currentUser);
+        int updateFlag = usersMapper.updateById(targetUser);
         if (updateFlag != 1) {
-            log.warn("重置密码失败: 用户ID {}", currentUserUUid);
+            log.warn("重置密码失败: 用户ID {}", resetPasswordDTO.getUuid());
             return Result.error(ResultCode.DATABASE_OPERATION_FAILED.getCode(), "重置密码失败");
         }
 
-        log.info("管理员 {} 重置了自己的密码", currentUserUUid);
+        log.info("管理员 {} 重置了用户 {} 的密码", currentUserUUid, resetPasswordDTO.getUuid());
         return Result.success("重置密码成功");
     }
 
     @Override
     public Result<?> getUserCount() {
-        // 获取当前用户信息
-        String currentRole = UserContext.getRole();
-        String currentStatus = UserContext.getStatus();
-
-        // 只有管理员才能查看用户总数
-        if (!DictConstants.UserRole.ADMIN.equals(currentRole)) {
-            return Result.error(ResultCode.VALIDATE_FAILED.getCode(), "只有管理员才能查看用户总数");
-        }
-
-        // 检查当前用户状态
-        if (Objects.equals(currentStatus, DictConstants.UserStatus.INACTIVE)) {
-            return Result.error(ResultCode.ACCOUNT_DISABLED.getCode(), "账号已被禁用，无法执行此操作");
-        }
-
-        // 查询用户总数
+        // 查询用户总数（内部服务调用，无需权限验证）
         QueryWrapper<Users> wrapper = new QueryWrapper<>();
         Long userCount = usersMapper.selectCount(wrapper);
 
         Map<String, Object> result = new HashMap<>();
         result.put("userCount", userCount);
+
+        return Result.success(result);
+    }
+
+    @Override
+    public Result<?> getMonthlyUserCount() {
+        // 获取本月第一天和最后一天
+        LocalDate now = LocalDate.now();
+        LocalDate firstDayOfMonth = now.withDayOfMonth(1);
+        LocalDate lastDayOfMonth = now.withDayOfMonth(now.lengthOfMonth());
+
+        // 查询本月新增用户数（内部服务调用，无需权限验证）
+        QueryWrapper<Users> wrapper = new QueryWrapper<>();
+        wrapper.ge("created_at", firstDayOfMonth.atStartOfDay());
+        wrapper.le("created_at", lastDayOfMonth.atTime(23, 59, 59));
+        Long monthlyUserCount = usersMapper.selectCount(wrapper);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("monthlyUserCount", monthlyUserCount);
+
+        return Result.success(result);
+    }
+
+    @Override
+    public Result<?> getLastMonthlyUserCount() {
+        // 获取上月第一天和最后一天
+        LocalDate now = LocalDate.now();
+        LocalDate firstDayOfLastMonth = now.minusMonths(1).withDayOfMonth(1);
+        LocalDate lastDayOfLastMonth = now.withDayOfMonth(1).minusDays(1);
+
+        // 查询上月新增用户数（内部服务调用，无需权限验证）
+        QueryWrapper<Users> wrapper = new QueryWrapper<>();
+        wrapper.ge("created_at", firstDayOfLastMonth.atStartOfDay());
+        wrapper.le("created_at", lastDayOfLastMonth.atTime(23, 59, 59));
+        Long lastMonthlyUserCount = usersMapper.selectCount(wrapper);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("lastMonthlyUserCount", lastMonthlyUserCount);
+
+        return Result.success(result);
+    }
+
+    @Override
+    public Result<?> getMonthlyUserCountByMonth(int year, int month) {
+        // 获取指定月份的第一天和最后一天
+        LocalDate firstDayOfMonth = LocalDate.of(year, month, 1);
+        LocalDate lastDayOfMonth = firstDayOfMonth.withDayOfMonth(firstDayOfMonth.lengthOfMonth());
+
+        // 查询指定月份的新增用户数（内部服务调用，无需权限验证）
+        QueryWrapper<Users> wrapper = new QueryWrapper<>();
+        wrapper.ge("created_at", firstDayOfMonth.atStartOfDay());
+        wrapper.le("created_at", lastDayOfMonth.atTime(23, 59, 59));
+        Long monthlyUserCount = usersMapper.selectCount(wrapper);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("monthlyUserCount", monthlyUserCount);
 
         return Result.success(result);
     }

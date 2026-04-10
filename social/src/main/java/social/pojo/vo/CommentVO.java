@@ -23,5 +23,6 @@ public class CommentVO {
     private String content;       // 评论内容
     private Integer likeCount;    // 点赞数
     private Boolean isLiked;      // 当前用户是否点赞
-    private LocalDateTime createdAt; // 创建时间
+    private LocalDateTime createTime; // 创建时间
+    private LocalDateTime updateTime; // 更新时间
 }

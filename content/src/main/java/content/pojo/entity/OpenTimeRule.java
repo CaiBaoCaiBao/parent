@@ -1,8 +1,10 @@
 package content.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import common.handler.JsonTypeHandler;
 import lombok.Data;
 import org.springframework.context.annotation.Description;
 
@@ -11,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-@TableName("open_time_rule")
+@TableName(value = "open_time_rule", autoResultMap = true)
 @Description("开放时间规则")
 public class OpenTimeRule {
     @TableId(value = "id", type = IdType.AUTO)
@@ -34,6 +36,7 @@ public class OpenTimeRule {
      * 营业时间段
      * 格式：[{"start": "09:00", "end": "12:00"}, {"start": "13:00", "end": "17:00"}]
      */
+    @TableField(typeHandler = JsonTypeHandler.class)
     private List<TimeSlot> timeSlots;
     private String description;
     /**

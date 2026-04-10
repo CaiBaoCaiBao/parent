@@ -43,6 +43,12 @@ public class TicketServiceImpl extends ServiceImpl<TicketMapper, Ticket> impleme
         }
         Ticket ticket = new Ticket();
         BeanUtils.copyProperties(dto, ticket);
+        // 生成票种ID（使用 "TICKET_" + ULID 格式，使ID更有语义）
+        ticket.setTid("TICKET_" + common.utils.ULIDUtils.generateULID());
+        // 设置默认状态为启用（1）
+        if (ticket.getStatus() == null) {
+            ticket.setStatus(1);
+        }
         boolean success = save(ticket);
         return success ? Result.success("创建成功") : Result.error(ResultCode.DATA_OPERATION_FAILED.getCode(), "创建失败");
     }

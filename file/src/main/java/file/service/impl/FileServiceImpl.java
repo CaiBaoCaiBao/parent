@@ -71,8 +71,8 @@ public class FileServiceImpl implements FileService {
             Response response = uploadManager.put(bytes, key, uploadToken);
 
             if (response.isOK()) {
-                // 8. 返回文件访问URL
-                String fileUrl = ossConfig.getDomain() + "/" + key;
+                // 8. 返回文件访问URL（使用https协议避免被网关重写）
+                String fileUrl = "http://" + ossConfig.getDomain() + "/" + key;
                 log.info("文件上传成功: {}", fileUrl);
                 return Result.success("上传成功", fileUrl);
             } else {

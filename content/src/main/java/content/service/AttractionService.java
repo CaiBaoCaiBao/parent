@@ -28,4 +28,10 @@ public interface AttractionService extends IService<Attraction> {
 
     @Description("获取景点详情")
     Result<AttractionDetailVO> getAttractionDetail(@Valid GetAttractionDetailDTO dto);
+
+    @Description("批量获取景点详情")
+    Result<?> getBatchAttractionDetail(java.util.List<String> attractionIds);
+
+    @Description("增加景点浏览数")
+    Result<?> incrementViewCount(String attractionId);
 }

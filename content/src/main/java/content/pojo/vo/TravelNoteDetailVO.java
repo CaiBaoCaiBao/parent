@@ -26,6 +26,7 @@ public class TravelNoteDetailVO {
     private Integer viewCount;
     private Integer likeCount;
     private Integer commentCount;
+    private Integer collectionCount;
     private Integer status;
     private Integer sortOrder;
     private LocalDateTime createdAt;

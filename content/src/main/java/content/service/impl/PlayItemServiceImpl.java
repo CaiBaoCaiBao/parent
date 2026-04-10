@@ -42,7 +42,13 @@ public class PlayItemServiceImpl extends ServiceImpl<PlayItemMapper, PlayItem> i
         PlayItem playItem = new PlayItem();
         BeanUtils.copyProperties(dto, playItem);
         // 生成游玩项目ID（使用 "PLAY_ITEM_" + ULID 格式，使ID更有语义）
-        playItem.setAid("PLAY_ITEM_" + common.utils.ULIDUtils.generateULID());
+        playItem.setPiid("PLAY_ITEM_" + common.utils.ULIDUtils.generateULID());
+        // 设置景点ID
+        playItem.setAid(dto.getAttractionId());
+        // 设置默认状态为启用（1）
+        if (playItem.getStatus() == null) {
+            playItem.setStatus(1);
+        }
         // images 字段会自动通过 JacksonTypeHandler 处理，无需手动序列化
         boolean success = save(playItem);
         return success ? Result.success("创建成功") : Result.error(ResultCode.DATA_OPERATION_FAILED.getCode(), "创建失败");
@@ -62,7 +68,7 @@ public class PlayItemServiceImpl extends ServiceImpl<PlayItemMapper, PlayItem> i
             return Result.error(ResultCode.ACCOUNT_LOCKED.getCode(), "账户处于封禁，无法进行该操作");
         }
         QueryWrapper<PlayItem> queryWrapper = new QueryWrapper<>();
-        queryWrapper.in("aid", dto.getAids());
+        queryWrapper.in("piid", dto.getPiids());
         boolean success = remove(queryWrapper);
         return success ? Result.success("删除成功") : Result.error(ResultCode.DATA_OPERATION_FAILED.getCode(), "删除失败");
     }
@@ -70,11 +76,11 @@ public class PlayItemServiceImpl extends ServiceImpl<PlayItemMapper, PlayItem> i
     @Override
     public Result<?> queryPlayItemList(QueryPlayItemDTO dto) {
         QueryWrapper<PlayItem> queryWrapper = new QueryWrapper<>();
-        if (StringUtils.hasText(dto.getAid())) {
-            queryWrapper.eq("aid", dto.getAid());
+        if (StringUtils.hasText(dto.getPiid())) {
+            queryWrapper.eq("piid", dto.getPiid());
         }
         if (StringUtils.hasText(dto.getAttractionId())) {
-            queryWrapper.eq("attraction_id", dto.getAttractionId());
+            queryWrapper.eq("aid", dto.getAttractionId());
         }
         if (StringUtils.hasText(dto.getName())) {
             queryWrapper.like("name", dto.getName());
@@ -102,12 +108,16 @@ public class PlayItemServiceImpl extends ServiceImpl<PlayItemMapper, PlayItem> i
             return Result.error(ResultCode.ACCOUNT_LOCKED.getCode(), "账户处于封禁，无法进行该操作");
         }
         QueryWrapper<PlayItem> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("aid", dto.getAid());
+        queryWrapper.eq("piid", dto.getPiid());
         PlayItem playItem = getOne(queryWrapper);
         if (playItem == null) {
             return Result.error(ResultCode.NOT_FOUND.getCode(), "游玩项目不存在");
         }
         BeanUtils.copyProperties(dto, playItem);
+        // 手动设置景点ID（因为字段名不同）
+        if (dto.getAttractionId() != null) {
+            playItem.setAid(dto.getAttractionId());
+        }
         // images 字段会自动通过 JacksonTypeHandler 处理，无需手动序列化
         boolean success = updateById(playItem);
         return success ? Result.success("更新成功") : Result.error(ResultCode.DATA_OPERATION_FAILED.getCode(), "更新失败");

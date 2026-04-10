@@ -28,6 +28,6 @@ public class CreateDestinationDTO {
     private Integer level;         // 层级：1-城市，2-景区
     private String bestSeason;    // 最佳季节
     private Integer travelDays;    // 建议游玩天数
-    private String status;         // 状态：0-禁用，1-启用
-    private String sortOrder;     // 排序
+    private Integer status;         // 状态：0-禁用，1-启用
+    private Integer sortOrder;     // 排序
 }

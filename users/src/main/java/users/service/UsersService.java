@@ -51,4 +51,13 @@ public interface UsersService extends IService<Users> {
 
     @Description(value = "获取用户总数")
     Result<?> getUserCount();
+
+    @Description(value = "获取本月新增用户数")
+    Result<?> getMonthlyUserCount();
+
+    @Description(value = "获取上月新增用户数")
+    Result<?> getLastMonthlyUserCount();
+
+    @Description(value = "获取指定月份的新增用户数")
+    Result<?> getMonthlyUserCountByMonth(int year, int month);
 }

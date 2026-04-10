@@ -44,5 +44,5 @@ logging:
 oss:
   access-key: NkprvCVs0h2k7dG1zxTo7Q2Me_CrpCja5tPxgGu7
   secret-key: OgRQ0n-oHVJBdEYEacZ_1zIhIGxhVJg13AN5nbV2
-  bucket: tourwo
-  domain: http://tbjbd6cen.hn-bkt.clouddn.com # 外链域名，每月月底更换
+  bucket: trip-tourwo
+  domain: td8cxm20c.hn-bkt.clouddn.com # 外链域名，每月月底更换

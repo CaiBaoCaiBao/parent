@@ -1,0 +1,558 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] parent                                                             [pom]
+[INFO] common                                                             [jar]
+[INFO] users                                                              [jar]
+[INFO] notification                                                       [jar]
+[INFO] file                                                               [jar]
+[INFO] content                                                            [jar]
+[INFO] social                                                             [jar]
+[INFO] 
+[INFO] ---------------------------< parent:parent >----------------------------
+[INFO] Building parent 1.0.0-SNAPSHOT                                     [1/7]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ parent ---
+[INFO] 
+[INFO] --- install:3.1.2:install (default-install) @ parent ---
+[INFO] Installing d:\tourwo\trip\parent\pom.xml to H:\Maven\respository\parent\parent\1.0.0-SNAPSHOT\parent-1.0.0-SNAPSHOT.pom
+[INFO] 
+[INFO] ---------------------------< parent:common >----------------------------
+[INFO] Building common 0.0.1-SNAPSHOT                                     [2/7]
+[INFO]   from common\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ common ---
+[INFO] Deleting D:\tourwo\trip\parent\common\target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ common ---
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ common ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 34 source files with javac [debug parameters release 17] to target\classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ common ---
+[INFO] skip non existing resourceDirectory D:\tourwo\trip\parent\common\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ common ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target\test-classes
+[INFO] 
+[INFO] --- surefire:3.2.5:test (default-test) @ common ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ common ---
+[INFO] Building jar: D:\tourwo\trip\parent\common\target\common-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:3.3.2:repackage (repackage) @ common ---
+[INFO] Replacing main artifact D:\tourwo\trip\parent\common\target\common-0.0.1-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to D:\tourwo\trip\parent\common\target\common-0.0.1-SNAPSHOT.jar.original
+[INFO] 
+[INFO] --- install:3.1.2:install (default-install) @ common ---
+[INFO] Installing D:\tourwo\trip\parent\common\pom.xml to H:\Maven\respository\parent\common\0.0.1-SNAPSHOT\common-0.0.1-SNAPSHOT.pom
+[INFO] Installing D:\tourwo\trip\parent\common\target\common-0.0.1-SNAPSHOT.jar to H:\Maven\respository\parent\common\0.0.1-SNAPSHOT\common-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] ----------------------------< parent:users >----------------------------
+[INFO] Building users 0.0.1-SNAPSHOT                                      [3/7]
+[INFO]   from users\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ users ---
+[INFO] Deleting D:\tourwo\trip\parent\users\target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ users ---
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] Copying 3 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ users ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 27 source files with javac [debug parameters release 17] to target\classes
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/UsersApplication.java:[3,25] 程序包common.interfaces不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/UsersApplication.java:[11,2] 找不到符号
+  符号: 类 EnableUnifiedResponse
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/AuthController.java:[3,20] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/AuthService.java:[4,20] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/AuthController.java:[24,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.controller.AuthController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/AuthController.java:[31,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.controller.AuthController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/AuthController.java:[38,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.controller.AuthController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/AuthController.java:[45,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.controller.AuthController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/AuthController.java:[52,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.controller.AuthController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/AuthService.java:[14,5] 找不到符号
+  符号:   类 Result
+  位置: 接口 users.service.AuthService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/AuthService.java:[17,5] 找不到符号
+  符号:   类 Result
+  位置: 接口 users.service.AuthService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/AuthService.java:[20,5] 找不到符号
+  符号:   类 Result
+  位置: 接口 users.service.AuthService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/AuthService.java:[23,5] 找不到符号
+  符号:   类 Result
+  位置: 接口 users.service.AuthService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/MailController.java:[3,20] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/MailService.java:[3,20] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/MailController.java:[25,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.controller.MailController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/MailService.java:[10,5] 找不到符号
+  符号:   类 Result
+  位置: 接口 users.service.MailService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[3,20] 程序包common.enums不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[4,20] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[4,20] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[26,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.controller.UserController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[33,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.controller.UserController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[40,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.controller.UserController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[47,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.controller.UserController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[64,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.controller.UserController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[71,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.controller.UserController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[78,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.controller.UserController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[85,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.controller.UserController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[92,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.controller.UserController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[100,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.controller.UserController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[107,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.controller.UserController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[114,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.controller.UserController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[15,5] 找不到符号
+  符号:   类 Result
+  位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[18,5] 找不到符号
+  符号:   类 Result
+  位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[21,5] 找不到符号
+  符号:   类 Result
+  位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[23,5] 找不到符号
+  符号:   类 Result
+  位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[26,5] 找不到符号
+  符号:   类 Result
+  位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[29,5] 找不到符号
+  符号:   类 Result
+  位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[32,5] 找不到符号
+  符号:   类 Result
+  位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[35,5] 找不到符号
+  符号:   类 Result
+  位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[38,5] 找不到符号
+  符号:   类 Result
+  位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[41,5] 找不到符号
+  符号:   类 Result
+  位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[44,5] 找不到符号
+  符号:   类 Result
+  位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[47,5] 找不到符号
+  符号:   类 Result
+  位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[50,5] 找不到符号
+  符号:   类 Result
+  位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[53,5] 找不到符号
+  符号:   类 Result
+  位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[7,21] 程序包common.common不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[8,21] 程序包common.common不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[9,19] 程序包common.dict不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[10,20] 程序包common.enums不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[11,20] 程序包common.enums不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[18,21] 程序包common.client不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[40,5] 找不到符号
+  符号:   类 NotificationClient
+  位置: 类 users.service.impl.AuthServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[42,5] 找不到符号
+  符号:   类 JwtUtil
+  位置: 类 users.service.impl.AuthServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[44,5] 找不到符号
+  符号:   类 RedisUtil
+  位置: 类 users.service.impl.AuthServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[46,5] 找不到符号
+  符号:   类 Verification
+  位置: 类 users.service.impl.AuthServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[49,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.service.impl.AuthServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[173,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.service.impl.AuthServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[269,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.service.impl.AuthServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[311,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.service.impl.AuthServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[12,1] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/MailServiceImpl.java:[3,20] 程序包common.enums不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/MailServiceImpl.java:[4,20] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/MailServiceImpl.java:[5,20] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/MailServiceImpl.java:[9,21] 程序包common.client不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/MailServiceImpl.java:[17,5] 找不到符号
+  符号:   类 NotificationClient
+  位置: 类 users.service.impl.MailServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/MailServiceImpl.java:[19,13] 找不到符号
+  符号:   类 Verification
+  位置: 类 users.service.impl.MailServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/MailServiceImpl.java:[23,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.service.impl.MailServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[6,21] 程序包common.client不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[7,21] 程序包common.client不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[8,21] 程序包common.common不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[9,22] 程序包common.context不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[10,19] 程序包common.dict不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[11,20] 程序包common.enums不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[12,20] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[13,20] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[14,20] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[15,20] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[47,5] 找不到符号
+  符号:   类 FileClient
+  位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[49,5] 找不到符号
+  符号:   类 ContentClient
+  位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[51,5] 找不到符号
+  符号:   类 JwtUtil
+  位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[54,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[103,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[132,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[147,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[169,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[191,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[209,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[260,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[295,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[326,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[335,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[350,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[360,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[408,12] 找不到符号
+  符号:   类 Result
+  位置: 类 users.service.impl.UsersServiceImpl
+[INFO] 95 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary:
+[INFO] 
+[INFO] parent 1.0.0-SNAPSHOT .............................. SUCCESS [  0.249 s]
+[INFO] common 0.0.1-SNAPSHOT .............................. SUCCESS [  9.272 s]
+[INFO] users 0.0.1-SNAPSHOT ............................... FAILURE [  1.878 s]
+[INFO] notification 0.0.1-SNAPSHOT ........................ SKIPPED
+[INFO] file 0.0.1-SNAPSHOT ................................ SKIPPED
+[INFO] content 0.0.1-SNAPSHOT ............................. SKIPPED
+[INFO] social 0.0.1-SNAPSHOT .............................. SKIPPED
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  11.984 s
+[INFO] Finished at: 2026-03-15T22:33:56+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile (default-compile) on project users: Compilation failure: Compilation failure: 
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/UsersApplication.java:[3,25] 程序包common.interfaces不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/UsersApplication.java:[11,2] 找不到符号
+[ERROR]   符号: 类 EnableUnifiedResponse
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/AuthController.java:[3,20] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/AuthService.java:[4,20] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/AuthController.java:[24,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.controller.AuthController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/AuthController.java:[31,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.controller.AuthController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/AuthController.java:[38,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.controller.AuthController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/AuthController.java:[45,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.controller.AuthController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/AuthController.java:[52,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.controller.AuthController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/AuthService.java:[14,5] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 接口 users.service.AuthService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/AuthService.java:[17,5] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 接口 users.service.AuthService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/AuthService.java:[20,5] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 接口 users.service.AuthService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/AuthService.java:[23,5] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 接口 users.service.AuthService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/MailController.java:[3,20] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/MailService.java:[3,20] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/MailController.java:[25,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.controller.MailController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/MailService.java:[10,5] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 接口 users.service.MailService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[3,20] 程序包common.enums不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[4,20] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[4,20] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[26,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.controller.UserController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[33,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.controller.UserController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[40,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.controller.UserController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[47,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.controller.UserController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[64,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.controller.UserController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[71,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.controller.UserController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[78,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.controller.UserController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[85,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.controller.UserController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[92,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.controller.UserController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[100,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.controller.UserController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[107,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.controller.UserController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/controller/UserController.java:[114,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.controller.UserController
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[15,5] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[18,5] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[21,5] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[23,5] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[26,5] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[29,5] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[32,5] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[35,5] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[38,5] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[41,5] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[44,5] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[47,5] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[50,5] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/UsersService.java:[53,5] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 接口 users.service.UsersService
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[7,21] 程序包common.common不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[8,21] 程序包common.common不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[9,19] 程序包common.dict不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[10,20] 程序包common.enums不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[11,20] 程序包common.enums不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[18,21] 程序包common.client不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[40,5] 找不到符号
+[ERROR]   符号:   类 NotificationClient
+[ERROR]   位置: 类 users.service.impl.AuthServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[42,5] 找不到符号
+[ERROR]   符号:   类 JwtUtil
+[ERROR]   位置: 类 users.service.impl.AuthServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[44,5] 找不到符号
+[ERROR]   符号:   类 RedisUtil
+[ERROR]   位置: 类 users.service.impl.AuthServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[46,5] 找不到符号
+[ERROR]   符号:   类 Verification
+[ERROR]   位置: 类 users.service.impl.AuthServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[49,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.service.impl.AuthServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[173,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.service.impl.AuthServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[269,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.service.impl.AuthServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[311,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.service.impl.AuthServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/AuthServiceImpl.java:[12,1] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/MailServiceImpl.java:[3,20] 程序包common.enums不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/MailServiceImpl.java:[4,20] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/MailServiceImpl.java:[5,20] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/MailServiceImpl.java:[9,21] 程序包common.client不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/MailServiceImpl.java:[17,5] 找不到符号
+[ERROR]   符号:   类 NotificationClient
+[ERROR]   位置: 类 users.service.impl.MailServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/MailServiceImpl.java:[19,13] 找不到符号
+[ERROR]   符号:   类 Verification
+[ERROR]   位置: 类 users.service.impl.MailServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/MailServiceImpl.java:[23,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.service.impl.MailServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[6,21] 程序包common.client不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[7,21] 程序包common.client不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[8,21] 程序包common.common不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[9,22] 程序包common.context不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[10,19] 程序包common.dict不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[11,20] 程序包common.enums不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[12,20] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[13,20] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[14,20] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[15,20] 程序包common.utils不存在
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[47,5] 找不到符号
+[ERROR]   符号:   类 FileClient
+[ERROR]   位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[49,5] 找不到符号
+[ERROR]   符号:   类 ContentClient
+[ERROR]   位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[51,5] 找不到符号
+[ERROR]   符号:   类 JwtUtil
+[ERROR]   位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[54,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[103,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[132,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[147,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[169,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[191,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[209,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[260,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[295,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[326,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[335,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[350,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[360,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] /D:/tourwo/trip/parent/users/src/main/java/users/service/impl/UsersServiceImpl.java:[408,12] 找不到符号
+[ERROR]   符号:   类 Result
+[ERROR]   位置: 类 users.service.impl.UsersServiceImpl
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+[ERROR] 
+[ERROR] After correcting the problems, you can resume the build with the command
+[ERROR]   mvn <args> -rf :users

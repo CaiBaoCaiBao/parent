@@ -85,6 +85,15 @@ public class HomeRecommendServiceImpl implements HomeRecommendService {
             allNotes.addAll(hotNotes);
         }
 
+        // 如果还是没有数据，查询所有已发布的游记（不限制状态）
+        if (allNotes.isEmpty()) {
+            QueryWrapper<TravelNote> allWrapper = new QueryWrapper<>();
+            allWrapper.ne("status", -1); // 排除草稿
+            allWrapper.orderByDesc("view_count", "created_at");
+            allWrapper.last("LIMIT " + RECOMMEND_SIZE);
+            allNotes = travelNoteService.list(allWrapper);
+        }
+
         // 收集用户ID
         List<String> userIds = allNotes.stream()
                 .map(TravelNote::getUserId)
@@ -98,7 +107,11 @@ public class HomeRecommendServiceImpl implements HomeRecommendService {
             if (batchResult != null && batchResult.getSuccess() && batchResult.getData() != null) {
                 List<Map<String, Object>> userInfoList = (List<Map<String, Object>>) batchResult.getData();
                 for (Map<String, Object> userInfo : userInfoList) {
+                    // 兼容两种字段名：uUid 和 uuid
                     String uUid = (String) userInfo.get("uUid");
+                    if (uUid == null) {
+                        uUid = (String) userInfo.get("uuid");
+                    }
                     userInfoMap.put(uUid, userInfo);
                 }
             }
@@ -141,7 +154,7 @@ public class HomeRecommendServiceImpl implements HomeRecommendService {
      */
     private List<HomeRecommendVO.DestinationItem> getHotDestinations() {
         QueryWrapper<Destination> wrapper = new QueryWrapper<>();
-        wrapper.eq("status", "1"); // 启用状态
+        wrapper.eq("status", 1); // 启用状态
         wrapper.orderByDesc("view_count", "created_at"); // 按浏览量和创建时间排序
         wrapper.last("LIMIT " + RECOMMEND_SIZE);
         List<Destination> destinations = destinationService.list(wrapper);
@@ -169,6 +182,14 @@ public class HomeRecommendServiceImpl implements HomeRecommendService {
         wrapper.orderByDesc("view_count", "created_at"); // 按浏览量和创建时间排序
         wrapper.last("LIMIT " + RECOMMEND_SIZE);
         List<Attraction> attractions = attractionService.list(wrapper);
+
+        // 如果没有数据，查询所有景点（不限制状态）
+        if (attractions.isEmpty()) {
+            QueryWrapper<Attraction> allWrapper = new QueryWrapper<>();
+            allWrapper.orderByDesc("view_count", "created_at");
+            allWrapper.last("LIMIT " + RECOMMEND_SIZE);
+            attractions = attractionService.list(allWrapper);
+        }
 
         // 收集目的地ID
         List<String> destinationIds = attractions.stream()
@@ -212,12 +233,13 @@ public class HomeRecommendServiceImpl implements HomeRecommendService {
 
     /**
      * 获取热门目的地排行
+     * 游客和普通用户都可以访问
      * @param dto 查询参数
      * @return 热门目的地排行
      */
     public Result<HotDestinationVO> getHotDestinationRanking(QueryHotDestinationDTO dto) {
         QueryWrapper<Destination> wrapper = new QueryWrapper<>();
-        wrapper.eq("status", "1"); // 启用状态
+        wrapper.eq("status", 1); // 启用状态
         wrapper.orderByDesc("view_count", "created_at"); // 按浏览量和创建时间排序
         wrapper.last("LIMIT " + dto.getLimit());
         List<Destination> destinations = destinationService.list(wrapper);

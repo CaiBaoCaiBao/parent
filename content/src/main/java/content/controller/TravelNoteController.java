@@ -32,6 +32,20 @@ public class TravelNoteController {
     }
 
     @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/api/save-draft")
+    @Description(value = "保存游记草稿")
+    public Result<?> saveDraft(@RequestBody @Valid CreateTravelNoteDTO dto) {
+        return travelNoteService.saveDraft(dto);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/api/publish-draft")
+    @Description(value = "发布草稿")
+    public Result<?> publishDraft(@RequestBody @Valid UpdateTravelNoteDTO dto) {
+        return travelNoteService.publishDraft(dto);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
     @DeleteMapping("/api/delete")
     @Description(value = "批量删除游记")
     public Result<?> deleteTravelNote(@RequestBody @Valid DeleteTravelNoteDTO dto) {
@@ -40,9 +54,24 @@ public class TravelNoteController {
 
     @Transactional(rollbackFor = Exception.class)
     @GetMapping("/api/list")
-    @Description(value = "查询游记列表")
+    @Description(value = "查询游记列表（公开接口，游客可访问）")
     public Result<?> queryTravelNoteList(@ModelAttribute QueryTravelNoteDTO dto) {
         return travelNoteService.queryTravelNoteList(dto);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @GetMapping("/api/my-list")
+    @Description(value = "查询我的游记列表（需要登录，可查看所有状态的游记）")
+    public Result<?> queryMyTravelNoteList(@ModelAttribute QueryTravelNoteDTO dto) {
+        return travelNoteService.queryMyTravelNoteList(dto);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @GetMapping("/api/hot")
+    @Description(value = "获取热门游记列表")
+    public Result<?> getHotTravelNotes(@RequestParam(defaultValue = "1") Integer pageNum,
+                                        @RequestParam(defaultValue = "10") Integer pageSize) {
+        return travelNoteService.getHotTravelNotes(pageNum, pageSize);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -54,9 +83,16 @@ public class TravelNoteController {
 
     @Transactional(rollbackFor = Exception.class)
     @GetMapping("/api/detail")
-    @Description(value = "获取游记详情")
+    @Description(value = "获取游记详情（公开接口，游客可访问已发布游记）")
     public Result<TravelNoteDetailVO> getTravelNoteDetail(@ModelAttribute @Valid GetTravelNoteDetailDTO dto) {
         return travelNoteService.getTravelNoteDetail(dto);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @GetMapping("/api/my-detail")
+    @Description(value = "获取我的游记详情（需要登录，可访问自己的草稿）")
+    public Result<TravelNoteDetailVO> getMyTravelNoteDetail(@ModelAttribute @Valid GetTravelNoteDetailDTO dto) {
+        return travelNoteService.getMyTravelNoteDetail(dto);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -67,9 +103,23 @@ public class TravelNoteController {
     }
 
     @Transactional(rollbackFor = Exception.class)
+    @GetMapping("/admin-api/list")
+    @Description(value = "管理员查询游记列表（需要管理员权限，可查看所有状态的游记）")
+    public Result<?> queryTravelNoteListForAdmin(@ModelAttribute QueryTravelNoteDTO dto) {
+        return travelNoteService.queryTravelNoteListForAdmin(dto);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
     @PostMapping("/admin-api/set-top")
-    @Description(value = "置顶/取消置顶游记")
+    @Description(value = "置顶/取消置顶游记（管理员）")
     public Result<?> setTopTravelNote(@RequestBody @Valid SetTopTravelNoteDTO dto) {
+        return travelNoteService.setTopTravelNote(dto);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/api/set-top")
+    @Description(value = "置顶/取消置顶游记（用户）")
+    public Result<?> setTopTravelNoteUser(@RequestBody @Valid SetTopTravelNoteDTO dto) {
         return travelNoteService.setTopTravelNote(dto);
     }
 
@@ -78,5 +128,12 @@ public class TravelNoteController {
     @Description(value = "批量获取游记详情")
     public Result<?> getBatchTravelNoteDetail(@RequestParam("noteIds") List<String> noteIds) {
         return travelNoteService.getBatchTravelNoteDetail(noteIds);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/api/increment-view")
+    @Description(value = "增加游记浏览数")
+    public Result<?> incrementViewCount(@RequestBody @Valid GetTravelNoteDetailDTO dto) {
+        return travelNoteService.incrementViewCount(dto.getNoteId());
     }
 }

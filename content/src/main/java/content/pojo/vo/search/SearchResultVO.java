@@ -2,6 +2,7 @@ package content.pojo.vo.search;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -18,6 +19,11 @@ public class SearchResultVO {
     private List<DestinationItem> destinations;
 
     /**
+     * 景点列表
+     */
+    private List<AttractionItem> attractions;
+
+    /**
      * 游记总数
      */
     private Long travelNoteTotal;
@@ -26,6 +32,11 @@ public class SearchResultVO {
      * 目的地总数
      */
     private Long destinationTotal;
+
+    /**
+     * 景点总数
+     */
+    private Long attractionTotal;
 
     @Data
     public static class TravelNoteItem {
@@ -52,6 +63,21 @@ public class SearchResultVO {
         private String city;
         private Integer attractionCount;
         private Integer travelNoteCount;
+        private String createdAt;
+    }
+
+    @Data
+    public static class AttractionItem {
+        private String aid;
+        private String destinationId;
+        private String name;
+        private List<String> images;
+        private String address;
+        private String phone;
+        private String description;
+        private BigDecimal longitude;
+        private BigDecimal latitude;
+        private Integer viewCount;
         private String createdAt;
     }
 }

@@ -13,6 +13,12 @@ import org.springframework.context.annotation.Description;
 public class ResetPasswordDTO {
 
     /**
+     * 用户ID
+     */
+    @NotBlank(message = "用户ID不能为空")
+    private String uuid;
+
+    /**
      * 新密码
      */
     @NotBlank(message = "新密码不能为空")

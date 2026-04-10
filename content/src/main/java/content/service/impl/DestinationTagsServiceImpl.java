@@ -52,7 +52,7 @@ public class DestinationTagsServiceImpl extends ServiceImpl<DestinationTagsMappe
         }
         DestinationTags destinationTags = new DestinationTags();
         BeanUtils.copyProperties(dto, destinationTags);
-        destinationTags.setDestinationId(destination.getId());
+        destinationTags.setDestinationId(destination.getDestinationId());
         boolean success = save(destinationTags);
         return success ? Result.success("创建成功") : Result.error(ResultCode.DATA_OPERATION_FAILED.getCode(), "创建失败");
     }
@@ -84,7 +84,7 @@ public class DestinationTagsServiceImpl extends ServiceImpl<DestinationTagsMappe
             destinationQuery.eq("destination_id", dto.getDestinationId());
             Destination destination = destinationMapper.selectOne(destinationQuery);
             if (destination != null) {
-                queryWrapper.eq("destination_id", destination.getId());
+                queryWrapper.eq("destination_id", destination.getDestinationId());
             }
         }
         if (dto.getTagId() != null) {

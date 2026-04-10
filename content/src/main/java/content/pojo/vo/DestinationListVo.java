@@ -17,6 +17,6 @@ public class DestinationListVo {
     private String bestSeason; // 最佳季节
     private Integer travelDays;
     private Integer viewCount;
-    private String status;
-    private String sortOrder;
+    private Integer status; // 状态：0-禁用，1-启用
+    private Integer sortOrder; // 排序
 }

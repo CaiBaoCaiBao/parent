@@ -36,7 +36,7 @@ public class Banner {
     private String linkUrl;
 
     /**
-     * 链接类型：0-无，1-游记，2-目的地
+     * 链接类型：0-外部链接，1-景点，2-目的地，3-游记
      */
     private Integer linkType;
 

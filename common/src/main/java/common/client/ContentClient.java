@@ -26,4 +26,16 @@ public interface ContentClient {
 
     @GetMapping("/travel-note/api/batch-detail")
     Result<?> getBatchTravelNoteDetail(@RequestParam("noteIds") List<String> noteIds);
+
+    @GetMapping("/destination/api/detail")
+    Result<?> getDestinationDetail(@RequestParam("destinationId") String destinationId);
+
+    @GetMapping("/destination/api/batch-detail")
+    Result<?> getBatchDestinationDetail(@RequestParam("destinationIds") List<String> destinationIds);
+
+    @GetMapping("/attraction/api/detail")
+    Result<?> getAttractionDetail(@RequestParam("aid") String aid);
+
+    @GetMapping("/attraction/api/batch-detail")
+    Result<?> getBatchAttractionDetail(@RequestParam("attractionIds") List<String> attractionIds);
 }

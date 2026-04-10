@@ -19,8 +19,8 @@ public class AttractionDetailVO {
     private List<String> images;
     private String address;
     private String phone;
-    private BigDecimal longitude;
-    private BigDecimal latitude;
+    // private BigDecimal longitude;
+    // private BigDecimal latitude;
     private String description;
     private Integer viewCount;
     private Integer status;

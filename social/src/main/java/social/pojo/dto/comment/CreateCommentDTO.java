@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Description;
 public class CreateCommentDTO {
 
     @NotBlank(message = "评论目标类型不能为空")
-    private String targetType;    // 评论目标类型：travel_note-游记
+    private String targetType;    // 评论目标类型：travel_note-游记，destination-目的地，attraction-景点
 
     @NotBlank(message = "评论目标ID不能为空")
     private String targetId;      // 评论目标ID

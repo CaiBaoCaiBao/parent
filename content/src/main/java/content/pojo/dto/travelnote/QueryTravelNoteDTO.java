@@ -14,4 +14,5 @@ public class QueryTravelNoteDTO {
     private Integer status;       // 状态
     private Integer pageNum = 1;  // 页码
     private Integer pageSize = 10; // 每页数量
+    private Integer offset;       // 偏移量（用于分页）
 }

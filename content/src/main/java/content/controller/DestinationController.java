@@ -54,4 +54,18 @@ public class DestinationController {
     public Result<DestinationDetailVO> getDestinationDetail(@ModelAttribute @Valid GetDestinationDetailDTO dto){
         return destinationService.getDestinationDetail(dto);
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    @GetMapping("/api/batch-detail")
+    @Description(value = "批量获取目的地详情")
+    public Result<?> getBatchDestinationDetail(@RequestParam("destinationIds") java.util.List<String> destinationIds){
+        return destinationService.getBatchDestinationDetail(destinationIds);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/api/increment-view")
+    @Description(value = "增加目的地浏览数")
+    public Result<?> incrementViewCount(@RequestBody @Valid GetDestinationDetailDTO dto) {
+        return destinationService.incrementViewCount(dto.getDestinationId());
+    }
 }

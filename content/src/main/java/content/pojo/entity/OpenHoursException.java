@@ -1,9 +1,11 @@
 package content.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import common.handler.JsonTypeHandler;
 import lombok.Data;
 import org.springframework.context.annotation.Description;
 
@@ -11,7 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("open_hours_exception")
+@TableName(value = "open_hours_exception", autoResultMap = true)
 @Description("例外日期表")
 public class OpenHoursException {
     @TableId(value = "id", type = IdType.AUTO)
@@ -26,6 +28,7 @@ public class OpenHoursException {
     /**
      * 自定义时间段
      */
+    @TableField(typeHandler = JsonTypeHandler.class)
     private TimeSlot timeSlot;
     /**
      * 例外类型

@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Description;
 public class ToggleCollectionDTO {
 
     @NotBlank(message = "收藏目标类型不能为空")
-    private String targetType;    // 收藏目标类型：travel_note-游记
+    private String targetType;    // 收藏目标类型：travel_note-游记，destination-目的地，attraction-景点
 
     @NotBlank(message = "收藏目标ID不能为空")
     private String targetId;      // 收藏目标ID

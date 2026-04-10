@@ -1,9 +1,11 @@
 package content.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import common.handler.JsonTypeHandler;
 import common.interfaces.AmountFormat;
 import lombok.Data;
 import org.springframework.context.annotation.Description;
@@ -13,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-@TableName("attraction")
+@TableName(value = "attraction", autoResultMap = true)
 @Description("景点")
 public class Attraction {
     @TableId(value = "id", type = IdType.AUTO)
@@ -21,16 +23,17 @@ public class Attraction {
     private String aid;
     private String destinationId;
     private String name;
+    @TableField(typeHandler = JsonTypeHandler.class)
     private List<String> images;
     private String address;
     private String phone;
     /**
      * 经纬度后期替换成 GEOGRAPHY
      */
-    @AmountFormat(scale = 7)
-    private BigDecimal longitude; // 经度
-    @AmountFormat(scale = 7)
-    private BigDecimal latitude; // 维度
+    // @AmountFormat(scale = 7)
+    // private BigDecimal longitude; // 经度
+    // @AmountFormat(scale = 7)
+    // private BigDecimal latitude; // 维度
     private String description;
     private Integer viewCount;
     private Integer status;

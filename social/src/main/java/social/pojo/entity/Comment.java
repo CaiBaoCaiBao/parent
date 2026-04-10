@@ -17,7 +17,7 @@ public class Comment {
     private Long id;
     private String commentId;      // 评论ID
     private String userId;        // 用户ID
-    private String targetType;    // 评论目标类型：travel_note-游记
+    private String targetType;    // 评论目标类型：travel_note-游记，destination-目的地，attraction-景点
     private String targetId;      // 评论目标ID
     private String parentCommentId; // 父评论ID（用于回复）
     private String content;       // 评论内容

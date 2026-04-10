@@ -20,6 +20,7 @@ import java.util.List;
 public class PlayItem {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
+    private String piid;
     private String aid;
     private String name;
     @TableField(typeHandler = JacksonTypeHandler.class)

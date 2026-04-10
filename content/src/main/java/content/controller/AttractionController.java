@@ -54,4 +54,18 @@ public class AttractionController {
     public Result<AttractionDetailVO> getAttractionDetail(@ModelAttribute @Valid GetAttractionDetailDTO dto) {
         return attractionService.getAttractionDetail(dto);
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    @GetMapping("/api/batch-detail")
+    @Description(value = "批量获取景点详情")
+    public Result<?> getBatchAttractionDetail(@RequestParam("attractionIds") java.util.List<String> attractionIds) {
+        return attractionService.getBatchAttractionDetail(attractionIds);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/api/increment-view")
+    @Description(value = "增加景点浏览数")
+    public Result<?> incrementViewCount(@RequestBody @Valid GetAttractionDetailDTO dto) {
+        return attractionService.incrementViewCount(dto.getAid());
+    }
 }

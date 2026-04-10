@@ -12,8 +12,9 @@ public class DictConstants {
     }
 
     public static final class TravelNoteStatus {
-        public static final Integer PENDING = 0;  // 待审核
-        public static final Integer PUBLISHED = 1; // 已发布
-        public static final Integer REJECTED = 2;  // 已驳回
+        public static final Integer DRAFT = -1;   // 草稿
+        public static final Integer PENDING = 0;   // 待审核
+        public static final Integer PUBLISHED = 1;  // 已发布
+        public static final Integer REJECTED = 2;   // 已驳回
     }
 }

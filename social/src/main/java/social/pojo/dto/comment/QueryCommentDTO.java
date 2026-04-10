@@ -1,6 +1,5 @@
 package social.pojo.dto.comment;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.springframework.context.annotation.Description;
 
@@ -8,11 +7,11 @@ import org.springframework.context.annotation.Description;
 @Description("查询评论列表DTO")
 public class QueryCommentDTO {
 
-    @NotBlank(message = "评论目标类型不能为空")
-    private String targetType;    // 评论目标类型：travel_note-游记
+    private String targetType;    // 评论目标类型：travel_note-游记, destination-目的地, attraction-景点, all-全部
 
-    @NotBlank(message = "评论目标ID不能为空")
-    private String targetId;      // 评论目标ID
+    private String targetId;      // 评论目标ID（可选，为空时查询所有）
+
+    private String keyword;       // 关键词（搜索评论内容、用户昵称、用户名）
 
     private Integer page = 1;     // 页码
     private Integer pageSize = 10; // 每页数量

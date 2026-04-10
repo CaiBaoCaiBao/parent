@@ -22,7 +22,11 @@ public class TravelNote {
     private String userName;      // 用户名（非数据库字段，用于查询时返回）
     @TableField(exist = false)
     private String nickName;      // 昵称（非数据库字段，用于查询时返回）
+    @TableField(exist = false)
+    private String avatar;        // 头像（非数据库字段，用于查询时返回）
     private String destinationId; // 目的地ID
+    @TableField(exist = false)
+    private String destinationName; // 目的地名称（非数据库字段，用于查询时返回）
     private String title;         // 游记标题
     private String coverImg;     // 封面图片
     private String images;        // 图片列表（JSON格式）
@@ -32,6 +36,8 @@ public class TravelNote {
     private Integer viewCount;    // 浏览次数
     private Integer likeCount;    // 点赞次数
     private Integer commentCount; // 评论次数
+    @TableField(exist = false)
+    private Integer collectionCount; // 收藏次数（非数据库字段，用于查询时返回）
     private Integer status;       // 状态
     private Integer sortOrder;    // 排序
     private LocalDateTime createdAt;

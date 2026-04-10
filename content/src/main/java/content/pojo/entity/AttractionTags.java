@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class AttractionTags {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
-    private Long attractionId;
+    private String attractionId;
     private Long tagId;
     private Integer weight;
     private Boolean recommendFlag;

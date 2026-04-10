@@ -52,7 +52,7 @@ public class AttractionTagsServiceImpl extends ServiceImpl<AttractionTagsMapper,
         }
         AttractionTags attractionTags = new AttractionTags();
         BeanUtils.copyProperties(dto, attractionTags);
-        attractionTags.setAttractionId(attraction.getId());
+        attractionTags.setAttractionId(attraction.getAid());
         boolean success = save(attractionTags);
         return success ? Result.success("创建成功") : Result.error(ResultCode.DATA_OPERATION_FAILED.getCode(), "创建失败");
     }
@@ -84,7 +84,7 @@ public class AttractionTagsServiceImpl extends ServiceImpl<AttractionTagsMapper,
             attractionQuery.eq("aid", dto.getAttractionId());
             Attraction attraction = attractionMapper.selectOne(attractionQuery);
             if (attraction != null) {
-                queryWrapper.eq("attraction_id", attraction.getId());
+                queryWrapper.eq("attraction_id", attraction.getAid());
             }
         }
         if (dto.getTagId() != null) {

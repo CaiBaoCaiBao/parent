@@ -39,4 +39,6 @@ public class CreatePlayItemDTO {
 
     @AmountFormat(scale = 2)
     private BigDecimal discountPrice; // 折扣价格
+
+    private Integer status;       // 状态：1-启用，0-禁用
 }

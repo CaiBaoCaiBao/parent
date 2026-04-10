@@ -1,5 +1,6 @@
 package users.controller;
 
+import common.enums.ResultCode;
 import common.utils.Result;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +44,18 @@ public class UserController {
     @Transactional(rollbackFor = Exception.class)
     @GetMapping("/api/info")
     @Description(value = "查询用户详情资料")
-    public Result<?> detail(@RequestParam(value = "userName") String userName){
-        return usersService.getUserInfoByUserName(userName);
+    public Result<?> detail(@RequestParam(value = "uid", required = false) String uUid,
+                            @RequestParam(value = "userName", required = false) String userName){
+        // 优先使用 userName 查询
+        if (userName != null && !userName.isEmpty()) {
+            return usersService.getUserInfoByUserName(userName);
+        }
+        // 如果没有 userName，则使用 uid 查询
+        if (uUid != null && !uUid.isEmpty()) {
+            return usersService.getUserInfo(uUid);
+        }
+        // 两个参数都没有，返回错误
+        return Result.error(ResultCode.PARAM_ERROR.getCode(), "缺少必需的请求参数: uid 或 userName");
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -102,5 +113,26 @@ public class UserController {
     @Description(value = "获取用户总数")
     public Result<?> getUserCount(){
         return usersService.getUserCount();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @GetMapping("/api/monthly-count")
+    @Description(value = "获取本月新增用户数")
+    public Result<?> getMonthlyUserCount(){
+        return usersService.getMonthlyUserCount();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @GetMapping("/api/last-monthly-count")
+    @Description(value = "获取上月新增用户数")
+    public Result<?> getLastMonthlyUserCount(){
+        return usersService.getLastMonthlyUserCount();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @GetMapping("/api/monthly-count-by-month")
+    @Description(value = "获取指定月份的新增用户数")
+    public Result<?> getMonthlyUserCountByMonth(@RequestParam("year") int year, @RequestParam("month") int month){
+        return usersService.getMonthlyUserCountByMonth(year, month);
     }
 }
