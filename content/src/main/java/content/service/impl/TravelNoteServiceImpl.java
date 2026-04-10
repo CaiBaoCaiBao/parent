@@ -717,13 +717,13 @@ public class TravelNoteServiceImpl
         if (!Objects.equals(travelNote.getUserId(), currentUid)) {
             return Result.error(ResultCode.TOKEN_PARSE_ERROR.getCode(), "没有操作权限");
         }
-        // 检查游记状态：草稿可以编辑，已发布的游记不能编辑（需要重新审核）
-        if (Objects.equals(travelNote.getStatus(), DictConstants.TravelNoteStatus.PUBLISHED)) {
-            return Result.error(ResultCode.PARAM_ERROR.getCode(), "已发布的游记不能直接编辑，请删除后重新发布");
-        }
         BeanUtils.copyProperties(dto, travelNote);
-        // 保持原状态不变（草稿保持草稿，待审核保持待审核，已驳回保持已驳回）
-        // 如果需要修改状态，应该通过审核接口或发布草稿接口
+        // 已发布的游记编辑后需要重新审核，改为待审核状态
+        if (Objects.equals(travelNote.getStatus(), DictConstants.TravelNoteStatus.PUBLISHED)) {
+            travelNote.setStatus(DictConstants.TravelNoteStatus.PENDING);
+            log.info("用户 {} 编辑已发布的游记 {}, 状态改为待审核", currentUid, dto.getNoteId());
+        }
+        // 草稿保持草稿，待审核保持待审核，已驳回保持已驳回
         if (dto.getImages() != null && !dto.getImages().isEmpty()) {
             try {
                 travelNote.setImages(objectMapper.writeValueAsString(dto.getImages()));

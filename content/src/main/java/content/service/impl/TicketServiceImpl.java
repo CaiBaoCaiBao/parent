@@ -74,6 +74,9 @@ public class TicketServiceImpl extends ServiceImpl<TicketMapper, Ticket> impleme
 
     @Override
     public Result<?> queryTicketList(QueryTicketDTO dto) {
+        String role = UserContext.getRole();
+        boolean isAdmin = Objects.equals(role, DictConstants.UserRole.ADMIN);
+
         QueryWrapper<Ticket> queryWrapper = new QueryWrapper<>();
         if (StringUtils.hasText(dto.getTid())) {
             queryWrapper.eq("tid", dto.getTid());
@@ -87,7 +90,12 @@ public class TicketServiceImpl extends ServiceImpl<TicketMapper, Ticket> impleme
         if (StringUtils.hasText(dto.getTicketType())) {
             queryWrapper.eq("ticket_type", dto.getTicketType());
         }
-        if (dto.getStatus() != null) {
+        // 如果没有指定状态，普通用户默认只查询启用的门票（status=1），管理员查询所有
+        if (dto.getStatus() == null) {
+            if (!isAdmin) {
+                queryWrapper.eq("status", 1);
+            }
+        } else {
             queryWrapper.eq("status", dto.getStatus());
         }
         queryWrapper.orderByAsc("sort_order");

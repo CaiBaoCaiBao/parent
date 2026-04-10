@@ -75,6 +75,9 @@ public class PlayItemServiceImpl extends ServiceImpl<PlayItemMapper, PlayItem> i
 
     @Override
     public Result<?> queryPlayItemList(QueryPlayItemDTO dto) {
+        String role = UserContext.getRole();
+        boolean isAdmin = Objects.equals(role, DictConstants.UserRole.ADMIN);
+
         QueryWrapper<PlayItem> queryWrapper = new QueryWrapper<>();
         if (StringUtils.hasText(dto.getPiid())) {
             queryWrapper.eq("piid", dto.getPiid());
@@ -85,7 +88,12 @@ public class PlayItemServiceImpl extends ServiceImpl<PlayItemMapper, PlayItem> i
         if (StringUtils.hasText(dto.getName())) {
             queryWrapper.like("name", dto.getName());
         }
-        if (dto.getStatus() != null) {
+        // 如果没有指定状态，普通用户默认只查询启用的游玩项目（status=1），管理员查询所有
+        if (dto.getStatus() == null) {
+            if (!isAdmin) {
+                queryWrapper.eq("status", 1);
+            }
+        } else {
             queryWrapper.eq("status", dto.getStatus());
         }
         queryWrapper.orderByAsc("created_at");

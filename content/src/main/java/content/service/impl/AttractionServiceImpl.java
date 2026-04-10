@@ -329,9 +329,10 @@ public class AttractionServiceImpl
             vo.setTags(tagVOList);
         }
 
-        // 查询门票
+        // 查询门票（只查询启用状态的）
         QueryWrapper<Ticket> ticketQuery = new QueryWrapper<>();
         ticketQuery.eq("attraction_id", dto.getAid());
+        ticketQuery.eq("status", 1);
         ticketQuery.orderByAsc("sort_order");
         List<Ticket> ticketList = ticketMapper.selectList(ticketQuery);
         List<AttractionDetailVO.TicketVO> ticketVOList = ticketList.stream().map(ticket -> {
@@ -341,9 +342,10 @@ public class AttractionServiceImpl
         }).collect(Collectors.toList());
         vo.setTickets(ticketVOList);
 
-        // 查询游玩项目
+        // 查询游玩项目（只查询启用状态的）
         QueryWrapper<PlayItem> playItemQuery = new QueryWrapper<>();
         playItemQuery.eq("aid", dto.getAid());
+        playItemQuery.eq("status", 1);
         List<PlayItem> playItemList = playItemMapper.selectList(playItemQuery);
         List<AttractionDetailVO.PlayItemVO> playItemVOList = playItemList.stream().map(playItem -> {
             AttractionDetailVO.PlayItemVO playItemVO = new AttractionDetailVO.PlayItemVO();

@@ -361,7 +361,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
                 return Result.error(ResultCode.DATABASE_OPERATION_FAILED.getCode(), "更新用户头像失败");
             }
             log.info("上传成功: {}", fileUrl);
-            return Result.success("更新用户头像");
+            return Result.success("更新用户头像",fileUrl);
         } else {
             return fileResult;
         }
